@@ -36,9 +36,10 @@ export default class UsersController {
         try{
             const result = await UsersModel.getUser(allowedFields);
             if(result) {
+                const {password, ...userWithoutPassword} = result;
                 res.status(200).json({
                     success: false,
-                    body: result,
+                    body: userWithoutPassword,
                     message: `user ${result.ID} fetched successfully`
                 })
             }

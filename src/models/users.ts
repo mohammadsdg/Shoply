@@ -32,24 +32,15 @@ export default class UsersModel {
     }
     
     // Get User 
-    static async getUser(data: IGetUserParams): Promise<IGetUserData | false> {
+    static async getUser(data: IGetUserParams): Promise<(RowDataPacket & IGetUserData) | false> {
         const requiredFields = [data.user]
         const query = `SELECT * FROM users WHERE user = ?`;
         // Getting user
-        const [rows] = await pool.query<(RowDataPacket & IGetUserParams)[]>(query, requiredFields);
+        const [rows] = await pool.query<(RowDataPacket & IGetUserData)[]>(query, requiredFields);
         // Checking if there is any user
         if(rows.length>0) {
             const data = rows[0]
-
-            if(data) {
-                return {
-                    ID: data.ID,
-                    user: data.user,
-                    password: data.password,
-                    role: data.role,
-                    shop_id: data.shop_id
-                }
-            }
+            if (data) return data
         }
         return false
     }
