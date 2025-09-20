@@ -1,25 +1,6 @@
 import {pool} from "../config/db.ts"
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-
-interface IGetUserParams {
-    user: string
-}
-
-interface ISetUserParams extends IGetUserParams {
-    password: string,
-    role: string
-}
-
-interface IGetUserData {
-    ID?: number | null,
-    user: string,
-    password: string,
-    role: string | null,
-    shop_id: number | null
-}
-
-type TUserSafeData = Omit<IGetUserData, "password">
-
+import type { IGetUserData, IGetUserParams, ISetUserParams, TUserSafeData } from "../types/users.ts";
 
 
 

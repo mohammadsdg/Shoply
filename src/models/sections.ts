@@ -1,20 +1,8 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/db.ts";
+import type { IGetSectionData, ISetSectionData } from "../types/sections.ts";
 
-export interface IGetSectionData extends ISetSectionData {
-    ID: number | null,
-}
 
-interface ISetSectionData {
-    name: string,
-    params: number,
-    param_one: number,
-    param_two?: number | null,
-    param_three?: number | null,
-    created_at?: Date,
-    updated_at?: Date,
-    status?: number
-}
 
 export default class SectionsModel {
     // Get all the sections from sections table

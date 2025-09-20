@@ -1,8 +1,5 @@
 import { pool } from "../config/db.ts";
-
-interface IMaterialData {
-    name?: string
-}
+import type { IMaterialData } from "../types/index.ts";
 
 export default class MaterialsModel {
     static async getAllMaterials() {

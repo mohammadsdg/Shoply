@@ -5,6 +5,8 @@ import materialsRoutes from "./routes/materials.ts";
 import sectionsRoute from "./routes/sections.ts";
 import usersRoute from "./routes/users.ts";
 import shopsRoute from "./routes/shops.ts"
+import brandsRoute from "./routes/brands.ts";
+
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "5000");
 const app = express();
@@ -16,7 +18,8 @@ app.use(cors());
 app.use("/api/v1", materialsRoutes);
 app.use("/api/v1", sectionsRoute);
 app.use("/api/v1", usersRoute);
-app.use("/api/v1", shopsRoute)
+app.use("/api/v1", shopsRoute);
+app.use("/api/v1", brandsRoute);
 
 // start the server
 app.listen(PORT, ()=> {
