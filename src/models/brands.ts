@@ -23,13 +23,12 @@ export default class BrandsModel {
             info,
             status
         ) VALUES(?, ?, ?, ?)`;
-        const [result] = await pool.query<ResultSetHeader & number>(query, requiredFields);
+        const [result] = await pool.query<ResultSetHeader>(query, requiredFields);
         return result.insertId;
     }
 
-    static async updateBrand(data: TUpdateBrandDataParams, id: string | undefined) {
-        const requiredFields = Object.values(data);
-        requiredFields.push(id);
+    static async updateBrand(data: TUpdateBrandDataParams, id: string) {
+        const requiredFields = [...Object.values(data), id]
         const query = `UPDATE brands SET
             name= ?,
             info= ?,

@@ -82,8 +82,8 @@ export default class BrandsController {
     static async updateBrand(req: Request, res: Response) {
         const {id} = req.params;
         const {name, info, status} = req.body;
-        if(!name || !info || !status) {
-            res.status(400).json({
+        if(!name || !info || !status || !id) {
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
@@ -96,7 +96,7 @@ export default class BrandsController {
         }
         try{
             const result = await BrandsModel.updateBrand(data, id);
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 body: {
                     ID: result,
@@ -107,7 +107,7 @@ export default class BrandsController {
         }
         catch(err) {
             if (err instanceof Error) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     body: null,
                     message: err.message
