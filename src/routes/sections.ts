@@ -6,6 +6,6 @@ router.get("/sections", SectionsController.getAllSections)
 router.get("/sections/:id", SectionsController.getSection)
 router.post("/sections", SectionsController.setSection)
 router.put("/sections/:id", SectionsController.updateSection)
-// router.delete("/sections/:id", SectionsController.getAllSections)
+router.delete("/sections/:id", SectionsController.deleteSection)
 
 export default router;
