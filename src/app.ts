@@ -9,6 +9,7 @@ import brandsRoute from "./routes/brands.ts";
 import alloysRoute from "./routes/alloys.ts";
 import dimensionsRoute from "./routes/dimensions.ts";
 import groupingsRoute from "./routes/groupings.ts";
+import productsRoute from "./routes/products.ts";
 
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "5000");
@@ -26,6 +27,7 @@ app.use("/api/v1", brandsRoute);
 app.use("/api/v1", alloysRoute);
 app.use("/api/v1", dimensionsRoute);
 app.use("/api/v1", groupingsRoute);
+app.use("/api/v1", productsRoute);
 
 // start the server
 app.listen(PORT, ()=> {
