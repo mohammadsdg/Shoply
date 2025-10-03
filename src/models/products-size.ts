@@ -1,5 +1,6 @@
-import type { RowDataPacket } from "mysql2";
+import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/db.ts";
+import type { IProductSizeParams } from "../types/products-size.ts";
 
 export default class ProductsSizeModel {
     static async getAllProductsSize() {
@@ -54,11 +55,13 @@ export default class ProductsSizeModel {
         return rows[0];
     }
 
-    // static async setProductSize(data: ) {
-    //     const inserts = Object.keys(data);
-    //     const valueParameter = Object.values(data).map(val=> "?")
-    //     const values = Object.values(data);
-    //     const query = `INSERT INTO shoply_db.products_size(${inserts.join(", ")})
-    //     VALUES(${valueParameter.join(", ")})`
-    // }
+    static async setProductSize(data: IProductSizeParams) {
+        const inserts = Object.keys(data);
+        const valueParameter = Object.values(data).map(val=> "?")
+        const values = Object.values(data);
+        const query = `INSERT INTO shoply_db.products_size(${inserts.join(", ")})
+        VALUES(${valueParameter.join(", ")})`;
+        const [result] = await pool.query<ResultSetHeader>(query, values);
+        return result ? result.insertId : 0;
+    }
 }
