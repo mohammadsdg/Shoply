@@ -63,7 +63,6 @@ export default class ShopsController {
     static async setShop(req: Request, res: Response) {
         const {user_id, name, phone} = req.body;
         const allowedFields = [user_id, name, phone];
-        console.log()
         if(allowedFields.some(field=> field === null && field === undefined)) {
             return res.status(400).json({
                 success: false,
@@ -79,7 +78,7 @@ export default class ShopsController {
         try{
             const result = await ShopsModel.setShop(data);
             return res.status(201).json({
-                success: false,
+                success: true,
                 body: {
                     ID: result,
                     ...data

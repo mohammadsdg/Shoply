@@ -7,7 +7,7 @@ import type { IGetUserData, IGetUserParams, ISetUserParams, TUserSafeData } from
 export default class UsersModel {
     // Get all users
     static async getAllUsers() {
-        const query = `SELECT ID, user, role, shop_id FROM users`;
+        const query = `SELECT ID, username, role, shop_id FROM users`;
         const [rows] = await pool.query<(RowDataPacket & TUserSafeData)[]>(query);
         return rows;
     }
@@ -15,7 +15,7 @@ export default class UsersModel {
     // Get User 
     static async getUser(data: IGetUserParams): Promise<(RowDataPacket & IGetUserData) | false> {
         const requiredFields = [data.user]
-        const query = `SELECT * FROM users WHERE user = ?`;
+        const query = `SELECT * FROM users WHERE username = ?`;
         // Getting user
         const [rows] = await pool.query<(RowDataPacket & IGetUserData)[]>(query, requiredFields);
         // Checking if there is any user
@@ -30,7 +30,7 @@ export default class UsersModel {
     static async setUser(data: ISetUserParams): Promise<number | false | string | undefined> {
         const requiredFields: [string, string, string] = [data.user, data.password, data.role]
         // Query for setting user
-        const query = `INSERT INTO users(user, password) VALUES(?, ?)`;
+        const query = `INSERT INTO users(username, password) VALUES(?, ?)`;
         // Setting user
         try{
             const [result] = await pool.query<(ResultSetHeader)>(query, requiredFields);
