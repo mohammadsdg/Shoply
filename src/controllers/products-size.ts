@@ -2,6 +2,7 @@ import type {Request, Response} from "express"
 import ProductsSizeModel from "../models/products-size.ts"
 import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.ts";
 import type { IProductSizeParams } from "../types/products-size.ts";
+import StockItemsModel from "../models/stock-items.ts";
 
 export default class ProductsSizeController {
     static async getAllProducts(_: Request, res: Response) {
@@ -84,7 +85,6 @@ export default class ProductsSizeController {
             number, 
             weight,
         }
-        console.log(productSizeData)
 
         if (param_two===undefined) {
             productSizeData.param_two = null
@@ -137,7 +137,7 @@ export default class ProductsSizeController {
                 break;
         }
         productSizeData.density = density;
-
+        console.log(productSizeData)
         try{
             const productSizeId = await ProductsSizeModel.setProductSize(productSizeData);
             
@@ -150,7 +150,7 @@ export default class ProductsSizeController {
             }
 
             const stockItemData = {
-                stock_product_id: productSizeId,
+                product_size_id: productSizeId,
                 single_product: 1
             }
             const stockItemId = await StockItemsModel.setItem(
