@@ -1,3 +1,3 @@
-export interface IMaterialData {
-    name?: string
-}
+// export interface IGetMaterialData {
+//     name: string
+// }

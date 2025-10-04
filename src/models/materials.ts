@@ -1,5 +1,4 @@
 import { pool } from "../config/db.ts";
-import type { IMaterialData } from "../types/index.ts";
 
 export default class MaterialsModel {
     static async getAllMaterials() {
@@ -14,16 +13,18 @@ export default class MaterialsModel {
         return rows;
     }
 
-    static async setMaterial(data: IMaterialData) {
+    static async setMaterial(data: string) {
         const query: string = `INSERT INTO materials(name) VALUES(?)`;
         const [rows] = await pool.query(query, data);
     }
 
-    // static async updateMaterial(data, id) {
+    // static async updateMaterial(data, id: number) {
 
     // }
 
-    // static async deleteMaterial(id) {
-
+    // static async deleteMaterial(id: number) {
+    //     const query = `DELETE FROM shoply_db.materials WHERE ID = ?`
+    //     const [result] = await pool.query(query, [id]);
+    //     return result.affectedRows ? result.affectedRows : false;
     // }
 }

@@ -2,12 +2,14 @@ import MaterialsModel from "../models/materials.ts"
 import type { Response, Request } from "express";
 import MaterialService from "../services/materials.ts";
 
-const materialService = new MaterialService();
-
 export default class MaterialController {
-    static async getAllMaterials(_: Request, res: Response) {
+    private materialService: MaterialService
+    constructor(materialService: MaterialService) {
+        this.materialService = materialService
+    }
+    getAllMaterials = async (_: Request, res: Response) => {
         try{
-            const result = await materialService.getAllMaterials();
+            const result = await this.materialService.getAllMaterials();
             res.status(200).json({
                 success: true,
                 body: result,
@@ -30,8 +32,9 @@ export default class MaterialController {
         }
     }
 
-    static async getMaterial(req: Request, res: Response) {
+    getMaterial = async (req: Request, res: Response) => {
         const {id} = req.params;
+        const materialId = Number(id);
         if(!id) {
             res.status(400).json({
                 success: false,
@@ -40,7 +43,7 @@ export default class MaterialController {
             })
         }
         try{
-            const result = await MaterialsModel.getMaterial(id);
+            const result = await this.materialService.getMaterial(materialId);
             res.status(200).json({
                 success: true,
                 body: result,
@@ -63,7 +66,7 @@ export default class MaterialController {
         }
     }
 
-    static async setMaterial(req: Request, res: Response) {
+    setMaterial = async (req: Request, res: Response) => {
         const {name} = req.body;
         if(!name) {
             res.status(400).json({
@@ -99,7 +102,11 @@ export default class MaterialController {
         }
     }
 
-    static async updateMaterial(req: Request, res: Response) {
+    updateMaterial = async (req: Request, res: Response) => {
+        const {id} = req.params;
+        const materialId = Number(id);
+        const {name} = req.body;
+
         if(!req.body.name && !req.params.id) {
             return res.status(400).json({
                 success: false,
@@ -108,7 +115,7 @@ export default class MaterialController {
             })
         }
         try{
-            const result = await materiser.updateMaterial(req.body.name, req.params.id);
+            const result = await this.materialService.updateMaterial(materialId, name);
             console.log(result)
             if(result) {
                 return res.status(200).json({
@@ -144,7 +151,37 @@ export default class MaterialController {
         }
     }
 
-    static async deleteMaterial(req: Request, res: Response) {
-
+    deleteMaterial = async (req: Request, res: Response) => {
+        const {id} = req.params;
+        const materialId = Number(id);
+        try{
+            if(await this.materialService.deleteMaterial(materialId)) {
+                res.status(200).json({
+                    success: true,
+                    body: req.params.id,
+                    message: `Material ${req.params.id} removed successfully`
+                })
+            } else {
+                res.status(404).json({
+                    success: false,
+                    body: null,
+                    message: "No Material found."
+                })
+            }
+        }
+        catch(err) {
+            if(err instanceof Error) {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: "Internal server error"
+                })
+            }
+            return res.status(500).json({
+                success: false,
+                body: null,
+                message: "Unknown message"
+            })
+        }
     }
 }
