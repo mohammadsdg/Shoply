@@ -1,21 +1,31 @@
 import MaterialsModel from "../models/materials.ts"
 import type { Response, Request } from "express";
+import MaterialService from "../services/materials.ts";
 
-export default class MaterialsController {
-    static async getAllMaterials(req: Request, res: Response) {
+const materialService = new MaterialService();
+
+export default class MaterialController {
+    static async getAllMaterials(_: Request, res: Response) {
         try{
-            const result = await MaterialsModel.getAllMaterials();
+            const result = await materialService.getAllMaterials();
             res.status(200).json({
                 success: true,
                 body: result,
                 message: "All materials fetched successfully"
             })
         }
-        catch(err: any) {
-            res.status(500).json({
+        catch(err) {
+            if(err instanceof Error) {
+                res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: err.message
+                })
+            }
+            return res.status(500).json({
                 success: false,
                 body: null,
-                message: err.message
+                message: "Unknown message"
             })
         }
     }
@@ -38,10 +48,17 @@ export default class MaterialsController {
             })
         }
         catch(err) {
-            res.status(500).json({
+            if(err instanceof Error) {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: 'Internal server error'
+                })
+            }
+            return res.status(500).json({
                 success: false,
                 body: null,
-                message: 'Internal server error'
+                message: "Unknown message"
             })
         }
     }
@@ -67,16 +84,64 @@ export default class MaterialsController {
             })
         }
         catch(err: any) {
-            res.status(500).json({
+            if(err instanceof Error) {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: 'Internal server error'
+                })
+            }
+            return res.status(500).json({
                 success: false,
                 body: null,
-                message: err.message
+                message: "Unknown message"
             })
         }
     }
 
     static async updateMaterial(req: Request, res: Response) {
-
+        if(!req.body.name && !req.params.id) {
+            return res.status(400).json({
+                success: false,
+                body: null,
+                message: "Invalid request"
+            })
+        }
+        try{
+            const result = await materiser.updateMaterial(req.body.name, req.params.id);
+            console.log(result)
+            if(result) {
+                return res.status(200).json({
+                    success: true,
+                    body: {
+                        name: req.body.name,
+                        ID: result
+                    },
+                    message: `Material ${req.params.id} updated`
+                })
+            }
+            else {
+                return res.status(404).json({
+                    success: false,
+                    body: null,
+                    message: "No Material found."
+                })
+            }
+        }
+        catch(err: any) {
+            if(err instanceof Error) {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: 'Internal server error'
+                })
+            }
+            return res.status(500).json({
+                success: false,
+                body: null,
+                message: "Unknown message"
+            })
+        }
     }
 
     static async deleteMaterial(req: Request, res: Response) {

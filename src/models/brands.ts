@@ -1,6 +1,6 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/db.ts";
-import type { ISetBrandParams, TUpdateBrandDataParams } from "../types/brands.ts";
+import type { ISetBrandParams, TUpdateBrandParams } from "../types/brands.ts";
 
 export default class BrandsModel {
     static async getAllBrands() {
@@ -20,14 +20,13 @@ export default class BrandsModel {
         const query = `INSERT INTO brands(
             user_id,
             name,
-            info,
-            status
-        ) VALUES(?, ?, ?, ?)`;
+            info
+        ) VALUES(?, ?, ?)`;
         const [result] = await pool.query<ResultSetHeader>(query, requiredFields);
         return result.insertId;
     }
 
-    static async updateBrand(data: TUpdateBrandDataParams, id: string) {
+    static async updateBrand(data: TUpdateBrandParams, id: string) {
         const requiredFields = [...Object.values(data), id]
         const query = `UPDATE brands SET
             name= ?,

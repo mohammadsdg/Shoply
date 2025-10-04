@@ -4,3 +4,7 @@ export interface ISetAlloyParams {
     code: string,
     cutting_speed: string
 }
+
+export interface IGetAlloyData extends ISetAlloyParams{
+
+}
