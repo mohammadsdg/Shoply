@@ -1,6 +1,8 @@
 import MaterialsModel from "../models/materials.ts"
 import type { Response, Request } from "express";
 import MaterialService from "../services/materials.ts";
+import type { TCreateMaterial } from "../types/materials.ts";
+import type { TUpdateAlloyInput } from "../types/alloys.ts";
 
 export default class MaterialController {
     private materialService: MaterialService
@@ -75,13 +77,16 @@ export default class MaterialController {
                 message: "Invalid request"
             })
         }
+        const materialData: TCreateMaterial = {
+            name
+        }
         try{
-            const result = await MaterialsModel.setMaterial(name);
+            const result = await this.materialService.setMaterial(materialData);
             res.status(201).json({
                 success: true,
                 body: {
                     ID: result,
-                    ...req.body
+                    ...materialData
                 },
                 message: "Material created successfully"
             })
@@ -114,15 +119,18 @@ export default class MaterialController {
                 message: "Invalid request"
             })
         }
+        const materialData: TUpdateAlloyInput = {
+            name
+        }
         try{
-            const result = await this.materialService.updateMaterial(materialId, name);
+            const result = await this.materialService.updateMaterial(materialId, materialData);
             console.log(result)
             if(result) {
                 return res.status(200).json({
                     success: true,
                     body: {
-                        name: req.body.name,
-                        ID: result
+                        ID: materialId,
+                        ...materialData
                     },
                     message: `Material ${req.params.id} updated`
                 })

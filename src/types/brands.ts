@@ -1,15 +1,14 @@
-export interface ISetBrandParams {
+export interface IBrandData {
+    ID: number,
     user_id: number,
     name: string,
     info: string,
-}
-
-export interface IGetBrandData extends ISetBrandParams {
-    ID: number,
     status: number,
     created_at: Date,
     updated_at: Date
 }
 
-export type TUpdateBrandParams = Omit<ISetBrandParams, "user_id">
+export type TCreateBrandInput = Omit<IBrandData, "ID" | "status" | "created_at" | "updated_at">
+
+export type TUpdateBrandParams = Partial<TCreateBrandInput>
 

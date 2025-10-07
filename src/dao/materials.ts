@@ -1,34 +1,31 @@
-import type { ResultSetHeader, RowDataPacket } from "mysql2";
-import { pool } from "../config/db.ts";
+import { db, } from "../config/db.ts";
+import type { IMaterialData, TCreateMaterial, TUpdateMaterial } from "../types/materials.ts";
 
 export default class MaterialDao {
-    async getAll(): Promise<RowDataPacket[] | undefined> {
-        const query = `SELECT * FROM shoply_db.materials`;
-        const [rows] = await pool.query<RowDataPacket[]>(query);
-        return rows
+    async getAll(): Promise<IMaterialData[]> {
+        return db<IMaterialData>('materials').select("*");
     }
 
     async getById(id: number) {
-        const query = `SELECT * FROM shoply_db.materials WHERE ID = ?`;
-        const [result] = await pool.query<RowDataPacket[]>(query, [id]);
-        return result ? result : false;
+        return db<IMaterialData>('materials').where({ ID: id }).first()
     }
     
-    async create(name: string) {
-        const query = `INSERT INTO shoply_db.materials(name) VALUES(?)`;
-        const [result] = await pool.query<ResultSetHeader>(query, [name]);
-        return result.insertId ? result.insertId : false;
+    async create(data: TCreateMaterial) {
+        const [insertId] = await db<IMaterialData>('materials').insert(data);
+        return insertId;
     }
 
-    async update(id: number, name: string,) {
-        const query = `UPDATE shoply_db.materials SET name = ? WHERE (ID = ?);`;
-        const [result] = await pool.query<ResultSetHeader>(query, [name, id]);
-        return result.affectedRows ? result.affectedRows : false;
+    async update(id: number, data: TUpdateMaterial,) {
+        const affectedRows = await db<IMaterialData>('materials')
+            .where({ ID: id })
+            .update(data);
+        return affectedRows;
     }
 
     async delete(id: number) {
-        const query = `DELETE FROM shoply_db.materials WHERE ID = ?`
-        const [result] = await pool.query<ResultSetHeader>(query, [id]);
-        return result.affectedRows ? result.affectedRows : false;
+        const affectedRows = await db<IMaterialData>('materials')
+            .where({ ID: id })
+            .delete();
+        return affectedRows;
     }
 }

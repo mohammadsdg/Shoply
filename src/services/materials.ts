@@ -1,5 +1,5 @@
-import { pool } from "../config/db.ts";
 import MaterialDao from "../dao/materials.ts";
+import type { TCreateMaterial, TUpdateMaterial } from "../types/materials.ts";
 
 export default class MaterialService {
     private dao = new MaterialDao();
@@ -11,12 +11,12 @@ export default class MaterialService {
         return this.dao.getById(id);
     }
 
-    async setMaterial(name: string) {
-        return this.dao.create(name);
+    async setMaterial(data: TCreateMaterial) {
+        return this.dao.create(data);
     }
 
-    async updateMaterial(id: number, name: string) {
-        return this.dao.update(id, name);
+    async updateMaterial(id: number, data: TUpdateMaterial) {
+        return this.dao.update(id, data);
     }
 
     async deleteMaterial(id: number) {

@@ -1,6 +1,4 @@
 import type {Request, Response} from "express";
-import BrandsModel from "../models/brands.ts";
-import type { RowDataPacket } from "mysql2";
 import BrandService from "../services/brands.ts";
 
 export default class BrandController {

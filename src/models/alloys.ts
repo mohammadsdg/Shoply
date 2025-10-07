@@ -1,6 +1,6 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/db.ts";
-import type { ISetAlloyParams } from "../types/alloys.ts";
+import type { TCreateAlloyInput } from "../types/alloys.ts";
 
 export default class AlloysModel {
     static async getAllAlloys() {
@@ -15,7 +15,7 @@ export default class AlloysModel {
         return result[0];
     }
 
-    static async setAlloy(data: ISetAlloyParams) {
+    static async setAlloy(data: TCreateAlloyInput) {
         const requiredFields = Object.values(data);
         const query = `INSERT INTO alloys(
             material_id, 
@@ -27,7 +27,7 @@ export default class AlloysModel {
         return result.insertId;
     }
 
-    static async updateAlloy(data: ISetAlloyParams, id: number) {
+    static async updateAlloy(data: TCreateAlloyInput, id: number) {
         const requiredFields = Object.values(data);
         const query = `UPDATE alloys SET material_id= ?, name= ?, code= ?, cutting_speed= ?
             WHERE ID = ${id}`;

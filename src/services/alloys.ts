@@ -1,11 +1,10 @@
-import type { RowDataPacket } from "mysql2";
 import AlloysDao from "../dao/alloys.ts";
-import type { ISetAlloyParams } from "../types/alloys.ts";
+import type { IAlloyData, TCreateAlloyInput, TUpdateAlloyInput } from "../types/alloys.ts";
 
 export default class AlloyService {
     private dao = new AlloysDao();
 
-    getAllAlloys(): Promise<RowDataPacket[]> {
+    getAllAlloys(): Promise<IAlloyData[]> {
         return this.dao.getAll()
     }
 
@@ -13,11 +12,11 @@ export default class AlloyService {
         return this.dao.getById(id);
     }
 
-    setAlloy(data: ISetAlloyParams) {
+    setAlloy(data: TCreateAlloyInput) {
         return this.dao.create(data);
     }
 
-    updateAlloy(id: number, data: ISetAlloyParams) {
+    updateAlloy(id: number, data: TUpdateAlloyInput) {
         return this.dao.update(id, data)
     }
 

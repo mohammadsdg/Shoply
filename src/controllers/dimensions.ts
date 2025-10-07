@@ -1,10 +1,14 @@
 import type { Request, Response } from "express";
-import DimensionsModel from "../models/dimensions.ts";
+import DimensionService from "../services/dimensions.ts";
 
 export default class DimensionsController {
-    static async getAllDimensions(_: Request, res: Response) {
+    private dimensionService: DimensionService;
+    constructor(dimensionService: DimensionService) {
+        this.dimensionService = dimensionService
+    }
+    getAllDimensions = async (_: Request, res: Response) => {
         try{
-            const result = await DimensionsModel.getAllDimensions();
+            const result = await this.dimensionService.getAllDimensions();
             res.status(200).json({
                 success: true,
                 body: result,
@@ -22,7 +26,7 @@ export default class DimensionsController {
         }
     }
 
-    static async getDimension(req: Request, res: Response) {
+    getDimension = async (req: Request, res: Response) => {
         const {id} = req.params;
         const dimensionId = Number(id);
         if(isNaN(dimensionId)) {
@@ -34,7 +38,7 @@ export default class DimensionsController {
         }
 
         try{
-            const result = await DimensionsModel.getDimension(dimensionId);
+            const result = await this.dimensionService.getDimension(dimensionId);
             if(result) {
                 return res.status(200).json({
                     success: true,
@@ -66,25 +70,26 @@ export default class DimensionsController {
         }
     }
     
-    static async setDimension(req: Request, res: Response) {
-        const { dimensions } = req.body;
-        if (dimensions === undefined || dimensions === null) {
+    setDimension = async (req: Request, res: Response) => {
+        const { user_id, dimensions } = req.body;
+        if (user_id === undefined || dimensions === undefined || dimensions === null) {
             return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        const allowedFileds = {
+        const dimensionData = {
+            user_id,
             dimensions
         }
-        try {
-            const result = await DimensionsModel.setDimension(allowedFileds);
+        try {   
+            const result = await this.dimensionService.setDimension(dimensionData);
             res.status(201).json({
                 success: true,
                 body: {
                     ID: result,
-                    ...allowedFileds
+                    ...dimensionData
                 },
                 message: "dimension created successfully"
             })
@@ -105,7 +110,7 @@ export default class DimensionsController {
         }
     }
 
-    static async updateDimension(req: Request, res: Response) {
+    updateDimension = async (req: Request, res: Response) => {
         const {dimensions} = req.body;
         const {id} = req.params;
         const dimensionId = Number(id);
@@ -116,17 +121,17 @@ export default class DimensionsController {
                 message: "Invalid request"
             })
         }
-        const allowedFileds = {
+        const dimensionData = {
             dimensions
         }
         try{
-            const result = await DimensionsModel.updateDimension(allowedFileds, dimensionId);
+            const result = await this.dimensionService.updateDimension(dimensionId, dimensionData);
             if (result) {
                 res.status(200).json({
                     success: true,
                     body: {
                         ID: result,
-                        ...allowedFileds
+                        dimensions
                     },
                     message: `dimensions ${dimensionId} updated successfully`
                 })
@@ -155,7 +160,7 @@ export default class DimensionsController {
         }
     }
 
-    static async deleteDimension(req: Request, res: Response) {
+    deleteDimension = async (req: Request, res: Response) => {
         const {id} = req.params;
         const dimensionId = Number(id);
 
@@ -168,11 +173,11 @@ export default class DimensionsController {
         }
 
         try {
-            const result = await DimensionsModel.deleteDimension(dimensionId);
+            const result = await this.dimensionService.deleteDimension(dimensionId);
             if(result) {
                 res.status(200).json({
                     success: false,
-                    body: result,
+                    body: dimensionId,
                     message: `dimension ${dimensionId} deleted successfully`
                 })
             }

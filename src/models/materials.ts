@@ -1,4 +1,5 @@
 import { pool } from "../config/db.ts";
+import type { TCreateMaterial } from "../types/materials.ts";
 
 export default class MaterialsModel {
     static async getAllMaterials() {
@@ -13,7 +14,7 @@ export default class MaterialsModel {
         return rows;
     }
 
-    static async setMaterial(data: string) {
+    static async setMaterial(data: TCreateMaterial) {
         const query: string = `INSERT INTO materials(name) VALUES(?)`;
         const [rows] = await pool.query(query, data);
     }

@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
+    "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "build": "tsc",
     "node": "node dist/app.js"
   },
@@ -15,6 +16,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/knex": "^0.15.2",
     "@types/node": "^24.4.0",
     "colors": "^1.4.0",
     "ts-node": "^10.9.2",
@@ -25,6 +27,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "mysql2": "^3.14.5"
+    "knex": "^3.1.0",
+    "mysql2": "^3.14.5",
+    "tree-cli": "^0.6.7"
   }
 }
