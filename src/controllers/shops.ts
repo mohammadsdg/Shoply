@@ -1,10 +1,15 @@
 import ShopsModel from "../models/shops.ts"
 import type { Request, Response } from "express";
+import type ShopService from "../services/shops.ts";
 
 export default class ShopsController {
-    static async getAllShops(_: Request, res: Response) {
+    private shopService: ShopService;
+    constructor(shopService: ShopService) {
+        this.shopService = shopService
+    }
+    getAllShops = async (_: Request, res: Response) => {
         try{
-            const result = await ShopsModel.getAllShops();
+            const result = await this.shopService.getAllShops();
             res.status(200).json({
                 success: true,
                 body: result,
@@ -22,8 +27,9 @@ export default class ShopsController {
         }
     }
     
-    static async getShop(req: Request, res: Response) {
+    getShop = async (req: Request, res: Response) => {
         const {id} = req.params;
+        const shopId = Number(id);
         if(!id) {
             res.status(400).json({
                 success: false,
@@ -32,9 +38,8 @@ export default class ShopsController {
             })
         }
         try{
-            const result = await ShopsModel.getShop(id);
-            console.log(result)
-            if (result.length) {
+            const result = await this.shopService.getShop(shopId)
+            if (result) {
                 return res.status(200).json({
                     success: false,
                     body: result,
@@ -60,7 +65,7 @@ export default class ShopsController {
         }
     }
 
-    static async setShop(req: Request, res: Response) {
+    setShop = async (req: Request, res: Response) => {
         const {user_id, name, phone} = req.body;
         const allowedFields = [user_id, name, phone];
         if(allowedFields.some(field=> field === null && field === undefined)) {
@@ -97,9 +102,10 @@ export default class ShopsController {
         }
     }
 
-    static async updateShop(req: Request, res: Response) {
+    updateShop = async (req: Request, res: Response) => {
         const {name, phone, firstname, lastname} = req.body;
         const {id} = req.params;
+        const shopId = Number(id);
         const data = {
             name,
             phone,
@@ -107,7 +113,7 @@ export default class ShopsController {
             firstname
         }
         try{
-            const result = await ShopsModel.updateShop(data, id);
+            const result = await ShopsModel.updateShop(data, shopId);
             if(result) {
                 res.status(200).json({
                     success: true,
@@ -137,7 +143,7 @@ export default class ShopsController {
         }
     }
 
-    static async deleteShop(req: Request, res: Response) {
+    deleteShop = async (req: Request, res: Response) => {
         const {id} = req.params;
         try{
             const result = await ShopsModel.deleteShop(id);

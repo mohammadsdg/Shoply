@@ -1,12 +1,15 @@
 import experss from "express";
-import ShopsController from "../controllers/shops.ts";
+import ShopController from "../controllers/shops.ts";
+import ShopService from "../services/shops.ts";
 const router = experss.Router();
 
-router.get('/shops', ShopsController.getAllShops);
-router.get('/shops/:id', ShopsController.getShop);
-router.post('/shops', ShopsController.setShop);
-router.put('/shops/:id', ShopsController.updateShop);
-router.delete('/shops/:id', ShopsController.deleteShop);
+const shopService = new ShopService();
+const shopController = new ShopController(shopService);
+router.get('/shops', shopController.getAllShops);
+router.get('/shops/:id', shopController.getShop);
+router.post('/shops', shopController.setShop);
+router.put('/shops/:id', shopController.updateShop);
+router.delete('/shops/:id', shopController.deleteShop);
 
 
 export default router;

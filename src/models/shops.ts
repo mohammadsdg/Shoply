@@ -1,6 +1,6 @@
 import { pool } from "../config/db.ts";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-import type { IGetShopData, ISetShopParams, IUpdateShopData } from "../types/index.ts";
+import type { IShopData, TCreateShop, TUpdateShop } from "../types/index.ts";
 
 
 export default class ShopsModel {
@@ -16,14 +16,14 @@ export default class ShopsModel {
         return rows;
     }
 
-    static async setShop(data: ISetShopParams) {
+    static async setShop(data: TCreateShop) {
         const requiredFields = Object.values(data);
         const query = `INSERT INTO shops(user_id, name, phone) VALUES(?, ?, ?)`;
-        const [result] = await pool.query<(ResultSetHeader & IGetShopData)>(query, requiredFields);
+        const [result] = await pool.query<(ResultSetHeader & IShopData)>(query, requiredFields);
         return result.insertId;
     }
 
-    static async updateShop(data: IUpdateShopData, id: string | undefined) {
+    static async updateShop(data: TUpdateShop, id: number) {
         const requiredFields = Object.values(data);
         requiredFields.push(id);
         const query = `UPDATE shops SET

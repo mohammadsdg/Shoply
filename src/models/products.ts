@@ -1,7 +1,7 @@
 
 import { pool } from "../config/db.ts";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-import type { IProductSetParams } from "../types/products.ts";
+import type { TCreateProduct, TUpdateProduct } from "../types/products.ts";
 
 export default class ProductsModel {
     static async getAllProducts() {
@@ -16,7 +16,7 @@ export default class ProductsModel {
         return result[0];
     }
 
-    static async setProduct(data: IProductSetParams) {
+    static async setProduct(data: TCreateProduct) {
        const requiredFields = Object.values(data);
         const query = `INSERT INTO products(
             alloy_id,
@@ -30,7 +30,7 @@ export default class ProductsModel {
         return result.insertId;
     }
 
-    static async updateProduct(data: IProductSetParams, id: number) {
+    static async updateProduct(data: TUpdateProduct, id: number) {
         const requiredFields = [...Object.values(data), id]
         const query = `UPDATE products SET 
             alloy_id= ?,

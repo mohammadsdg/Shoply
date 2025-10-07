@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import ProductService from "../services/products.ts";
+
 export default class ProductController {
     private productService: ProductService;
     constructor(productService: ProductService) {
