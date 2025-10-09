@@ -1,4 +1,4 @@
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import express from "express";
@@ -18,10 +18,13 @@ import shopProductsRoute from "./routes/shop-products.ts";
 import productsSizeRoute from "./routes/products-size.ts";
 import stockItemsRoute from "./routes/stock-items.ts";
 
-
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "5000");
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 app.use(express.json());
 app.use(cors());

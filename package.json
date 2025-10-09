@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
+    "migration:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
     "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "build": "tsc",
     "node": "node dist/app.js"
@@ -29,6 +30,7 @@
     "express": "^5.1.0",
     "knex": "^3.1.0",
     "mysql2": "^3.14.5",
-    "tree-cli": "^0.6.7"
+    "tree-cli": "^0.6.7",
+    "ts-node-register": "^1.0.0"
   }
 }

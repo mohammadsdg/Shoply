@@ -1,10 +1,15 @@
 import StockItemsModel from "../models/stock-items.ts";
 import type { Request, Response } from "express";
+import type StockItemService from "../services/stock-items.ts";
 
 export default class StockItemsController {
-    static async getAllItems(_: Request, res: Response) {
+    private stockItemService: StockItemService
+    constructor(stockItemService: StockItemService) {
+        this.stockItemService = stockItemService
+    }
+    getAllItems = async (_: Request, res: Response) => {
         try {
-            const result = await StockItemsModel.getAllItems();
+            const result = this.stockItemService.getAllStockItems()
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -28,7 +33,7 @@ export default class StockItemsController {
         }
     }
 
-    static async getItem(req: Request, res: Response) {
+    getItem = async (req: Request, res: Response) => {
         const {id} = req.params;
         const stockItemId = Number(id);
         if(isNaN(stockItemId)) {
@@ -39,7 +44,7 @@ export default class StockItemsController {
             })
         }
         try {
-            const result = await StockItemsModel.getItem(stockItemId);
+            const result = await this.stockItemService.getStockItem(stockItemId)
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -63,7 +68,7 @@ export default class StockItemsController {
         }
     }
 
-    static async setItem(req: Request, res: Response) {
+    setItem = async (req: Request, res: Response) => {
         const {
             product_size_id, 
             single_product,
@@ -77,7 +82,7 @@ export default class StockItemsController {
             val=> val===undefined || val===null
         ))
         try {
-            // const result = await StockItemsModel.setItem(allowedData, );
+            // const result = 
             return res.status(201).json({
                 success: true,
                 body: {
@@ -104,7 +109,7 @@ export default class StockItemsController {
         }
     }
 
-    static async updateItem(req: Request, res: Response) {
+    updateItem = async (req: Request, res: Response) => {
         try {
             
         }
@@ -125,7 +130,7 @@ export default class StockItemsController {
         }
     }
 
-    static async deleteItem(req: Request, res: Response) {
+    deleteItem = async (req: Request, res: Response) => {
         try {
 
         }

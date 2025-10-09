@@ -1,21 +1,25 @@
-export default class ProductService {
+import ProductSizeDao from "../dao/products-size.ts";
+import type { TCreateProductSize, TUpdateProductSize } from "../types/products-size.ts";
+
+export default class ProductSizeService {
+    private productSizeDao = new ProductSizeDao();
     async getAllProducts() {
-        
+        return this.productSizeDao.getAll();
     }
 
-    async getProduct() {
-
+    async getProductSize(id: number) {
+        return this.productSizeDao.getById(id);
     }
 
-    async setProduct() {
-
+    async setProductSize(data: TCreateProductSize) {
+        return this.productSizeDao.create(data);
     }
 
-    async updateProduct() {
-
+    async updateProductSize(id: number, data: TUpdateProductSize) {
+        return this.productSizeDao.update(id, data)
     }
 
-    async deleteProduct() {
-
+    async deleteProductSize(id: number) {
+        return this.productSizeDao.delete(id);
     }
 }

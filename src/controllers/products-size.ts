@@ -1,8 +1,8 @@
 import type {Request, Response} from "express"
 import ProductsSizeModel from "../models/products-size.ts"
 import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.ts";
-import type { IProductSizeParams } from "../types/products-size.ts";
 import StockItemsModel from "../models/stock-items.ts";
+import type { TCreateProductSize } from "../types/products-size.ts";
 
 export default class ProductsSizeController {
     static async getAllProducts(_: Request, res: Response) {
@@ -74,9 +74,10 @@ export default class ProductsSizeController {
             number, 
             weight, 
             section_id,
+            price
         } = req.body;
 
-        const productSizeData: IProductSizeParams = {
+        const productSizeData: TCreateProductSize = {
             shop_products_id,
             param_one,
             param_two,
@@ -84,6 +85,7 @@ export default class ProductsSizeController {
             width, 
             number, 
             weight,
+            price
         }
 
         if (param_two===undefined) {
