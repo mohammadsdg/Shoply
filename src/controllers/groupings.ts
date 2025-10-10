@@ -1,9 +1,13 @@
 import type { Request, Response } from "express";
-import GroupingsModel from "../models/groupings.ts";
+import type GroupingService from "../services/groupings.ts";
 export default class GroupingsController {
-    static async getAllGroupings(_: Request, res: Response) {
+    private groupingService: GroupingService;
+    constructor(groupingService: GroupingService) {
+        this.groupingService = groupingService;
+    }
+    getAllGroupings = async (_: Request, res: Response) => {
         try {
-            const result = await GroupingsModel.getAllGroupings();
+            const result = await this.groupingService.getAllGroupings()
             res.status(200).json({
                 success: true,
                 body: result,
@@ -26,7 +30,7 @@ export default class GroupingsController {
         }
     }
 
-    static async getGrouping(req: Request, res: Response) {
+    getGrouping = async (req: Request, res: Response) => {
         const {id} = req.params;
         const groupingId = Number(id);
         if (isNaN(groupingId)) {
@@ -38,7 +42,7 @@ export default class GroupingsController {
         }
 
         try {
-            const result = await GroupingsModel.getGrouping(groupingId);
+            const result = await this.groupingService.getGrouping(groupingId);
             if (result) {
                 res.status(200).json({
                     success: true,
@@ -70,7 +74,7 @@ export default class GroupingsController {
         }
     }
 
-    static async postGrouping(req: Request, res: Response) {
+    postGrouping = async (req: Request, res: Response) => {
         const {name, section_id, material_id} = req.body;
         if (!name || !section_id || !material_id) {
             res.status(400).json({
@@ -79,18 +83,18 @@ export default class GroupingsController {
                 message: "Invalid request"
             })
         }
-        const allowedFields = {
+        const groupingData = {
             name,
             section_id,
             material_id
         };
         try {
-            const result = await GroupingsModel.setGrouping(allowedFields);
+            const result = await this.groupingService.setGrouping(groupingData);
             res.status(200).json({
                 success: true,
                 body: {
                     ID: result,
-                    ...allowedFields
+                    ...groupingData
                 },
                 message: "grouping created successfully"
             })
@@ -111,7 +115,7 @@ export default class GroupingsController {
         }
     }
 
-    static async updateGrouping(req: Request, res: Response) {
+    updateGrouping = async (req: Request, res: Response) => {
         const {name, section_id, material_id} = req.body;
         const {id} = req.params;
         const groupingId = Number(id);
@@ -122,20 +126,20 @@ export default class GroupingsController {
                 message: "Invalid request"
             })
         }
-        const allowedFields = {
+        const groupingData = {
             name,
             section_id,
             material_id
         };
 
         try {
-            const result = await GroupingsModel.updateGrouping(allowedFields, groupingId);
+            const result = await this.groupingService.updateGrouping(groupingId, groupingData);
             if (result) {
                 res.status(200).json({
                     success: true,
                     body: {
                         ID: result,
-                        ...allowedFields
+                        ...groupingData
                     },
                     message: `grouping ${groupingId} updated successfully`
                 })
@@ -164,11 +168,11 @@ export default class GroupingsController {
         }
     }
 
-    static async deleteGrouping(req: Request, res: Response) {
+    deleteGrouping = async (req: Request, res: Response) => {
         const {id} = req.params;
         const groupingId = Number(id);
         try {
-            const result = await GroupingsModel.deleteGrouping(groupingId);
+            const result = await this.groupingService.deleteGrouping(groupingId);
             if (result) {
                 res.status(200).json({
                     success: true,

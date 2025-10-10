@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import UsersModel from "../models/users.ts";
 import type UserService from "../services/users.ts";
+import type { IUserInput } from "../types/users.ts";
 
 export default class UsersController {
     private userService: UserService;
@@ -59,24 +59,24 @@ export default class UsersController {
     }
 
     setUser = async (req: Request, res: Response) => {
-        let {user, password, role} = req.body;
+        let {username, password, role} = req.body;
         // Setting default role 
         role = role || "user"
         // Check if user and password has been sent
-        if(!user || !password) {
+        if(!username || !password) {
             res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        const userData = {
-            user,
+        const userData: IUserInput = {
+            username,
             password,
             role
         }
         try{
-            const result = await UsersModel.setUser(userData);
+            const result = await this.userService.setUser(userData)
             if(typeof result === "string") {
                 return res.status(409).json({
                     success: false,
@@ -88,7 +88,7 @@ export default class UsersController {
                     success: true,
                     body: {
                         ID: result,
-                        user,
+                        username,
                         role
                     },
                     message: "User created successfully"

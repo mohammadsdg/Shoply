@@ -1,4 +1,4 @@
-import MaterialsModel from "../models/materials.ts"
+
 import type { Response, Request } from "express";
 import MaterialService from "../services/materials.ts";
 import type { TCreateMaterial } from "../types/materials.ts";

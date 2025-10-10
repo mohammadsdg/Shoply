@@ -1,13 +1,22 @@
 import type {Request, Response} from "express"
-import ProductsSizeModel from "../models/products-size.ts"
 import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.ts";
-import StockItemsModel from "../models/stock-items.ts";
 import type { TCreateProductSize } from "../types/products-size.ts";
+import type ProductSizeService from "../services/products-size.ts";
+import StockItemService from "../services/stock-items.ts";
 
 export default class ProductsSizeController {
-    static async getAllProducts(_: Request, res: Response) {
+    private productsSizeService: ProductSizeService;
+    private stockItemService: StockItemService;
+    constructor(
+        productsSizeService: ProductSizeService,
+        stockItemService: StockItemService
+    ) {
+        this.productsSizeService = productsSizeService
+        this.stockItemService = stockItemService
+    }
+    getAllProducts = async (_: Request, res: Response) => {
         try {
-            const result = await ProductsSizeModel.getAllProductsSize();
+            const result = await this.productsSizeService.getAllProducts()
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -30,7 +39,7 @@ export default class ProductsSizeController {
         }
     }
 
-    static async getProduct(req: Request, res: Response) {
+    getProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const productSizeId: number = Number(id);
         if(isNaN(productSizeId)) {
@@ -41,7 +50,7 @@ export default class ProductsSizeController {
             })
         }
         try{
-            const result = await ProductsSizeModel.getProductSize(productSizeId);
+            const result = await this.productsSizeService.getProductSize(productSizeId)
             res.status(200).json({
                 success: true,
                 body: result,
@@ -64,7 +73,7 @@ export default class ProductsSizeController {
         }
     }
 
-    static async setProduct(req: Request, res: Response) {
+    setProduct = async (req: Request, res: Response) => {
         const {
             shop_products_id, 
             param_one, 
@@ -141,7 +150,7 @@ export default class ProductsSizeController {
         productSizeData.density = density;
         console.log(productSizeData)
         try{
-            const productSizeId = await ProductsSizeModel.setProductSize(productSizeData);
+            const productSizeId = await this.productsSizeService.setProductSize(productSizeData)
             
             if (!productSizeId) {
                 return res.status(500).json({
@@ -155,9 +164,8 @@ export default class ProductsSizeController {
                 product_size_id: productSizeId,
                 single_product: 1
             }
-            const stockItemId = await StockItemsModel.setItem(
-                stockItemData,
-                number,
+            const stockItemId = await this.stockItemService.setStockItem(
+                stockItemData
             );
             // 3️⃣ Return combined response
             return res.status(201).json({

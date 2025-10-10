@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import AlloyService from "../services/alloys.ts";
 
-
 export default class AlloysController {
     private alloyService: AlloyService
     constructor(alloyService: AlloyService) {

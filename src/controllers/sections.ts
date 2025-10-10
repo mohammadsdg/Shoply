@@ -1,4 +1,3 @@
-import SectionsModel from "../models/sections.ts"
 import type { Response, Request } from "express";
 import SectionService from "../services/sections.ts";
 import type { TCreateSection, TUpdateSection } from "../types/sections.ts";

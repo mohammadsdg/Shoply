@@ -14,15 +14,6 @@ export async function up(knex: Knex): Promise<void> {
       })
       .defaultTo('user');
 
-    // Foreign key to shops
-    table.integer('shop_id').unsigned().nullable(); // must match shops.ID type
-    table
-      .foreign('shop_id')
-      .references('ID')
-      .inTable('shops')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
-
     table.timestamps(true, true)
 
     table.integer('status').defaultTo(10);

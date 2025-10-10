@@ -1,4 +1,3 @@
-import StockItemsModel from "../models/stock-items.ts";
 import type { Request, Response } from "express";
 import type StockItemService from "../services/stock-items.ts";
 

@@ -2,14 +2,15 @@
   "name": "shoply-backend-ts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon",
     "migration:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
     "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
+    "migration:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
     "build": "tsc",
-    "node": "node dist/app.js"
+    "node": "node app.js"
   },
   "author": "",
   "license": "MIT",

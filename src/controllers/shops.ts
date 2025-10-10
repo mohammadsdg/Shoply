@@ -1,4 +1,3 @@
-import ShopsModel from "../models/shops.ts"
 import type { Request, Response } from "express";
 import type ShopService from "../services/shops.ts";
 
@@ -75,18 +74,18 @@ export default class ShopsController {
                 message: "Invalid request"
             })
         }
-        const data = {
+        const shopData = {
             user_id,
             name,
             phone
         }
         try{
-            const result = await ShopsModel.setShop(data);
+            const result = await this.shopService.setShop(shopData);
             return res.status(201).json({
                 success: true,
                 body: {
                     ID: result,
-                    ...data
+                    ...shopData
                 },
                 message: "A shop created successfully"
             })
@@ -106,20 +105,20 @@ export default class ShopsController {
         const {name, phone, firstname, lastname} = req.body;
         const {id} = req.params;
         const shopId = Number(id);
-        const data = {
+        const shopData = {
             name,
             phone,
             lastname,
             firstname
         }
         try{
-            const result = await ShopsModel.updateShop(data, shopId);
+            const result = await this.shopService.updateShop(shopId, shopData)
             if(result) {
                 res.status(200).json({
                     success: true,
                     body: {
                         ID: id,
-                        ...data
+                        ...shopData
                     },
                     message: `shop ${id} updated successfully`
                 })
@@ -145,8 +144,9 @@ export default class ShopsController {
 
     deleteShop = async (req: Request, res: Response) => {
         const {id} = req.params;
+        const shopId = Number(id);
         try{
-            const result = await ShopsModel.deleteShop(id);
+            const result = await this.shopService.deleteShop(shopId);
             if(result) {
                 return res.status(200).json({
                     success: false,
