@@ -9,7 +9,7 @@
     "migration:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
     "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "migration:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
-    "build": "tsc",
+    "build": "tsc && copyfiles package.json package-lock.json dist",
     "node": "node app.js"
   },
   "author": "",
@@ -21,6 +21,7 @@
     "@types/knex": "^0.15.2",
     "@types/node": "^24.4.0",
     "colors": "^1.4.0",
+    "copyfiles": "^2.4.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"
   },

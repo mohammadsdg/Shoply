@@ -137,28 +137,27 @@ export async function down(knex: Knex): Promise<void> {
     
     // @DROP STOCK_ITEMS
     await knex.schema.alterTable('stock_items', table=> {
-        table.dropForeign(['stock_items_id'])
+        table.dropForeign(['product_size_id']);
     })
 
     // @DROP PRODUCTS_SIZE
     await knex.schema.alterTable('products_size', table=> {
-        table.dropForeign(['shop_products_id'])
+        table.dropForeign(['shop_products_id']);
     })
 
     // @DROP SHOP_PRODUCTS
     await knex.schema.alterTable('shop_products', table=> {
-        table.dropForeign(['shop_id', 'product_id'])
+        table.dropForeign(['shop_id']);
+        table.dropForeign(['product_id']);
     })
     
     // @DROP PRODUCTS
     await knex.schema.alterTable('products', table=> {
-        table.dropForeign([
-            'section_id',
-            'material_id',
-            'alloy_id',
-            'grouping_id',
-            'brand_id'
-        ])
+        table.dropForeign(['brand_id']);
+        table.dropForeign(['grouping_id']);
+        table.dropForeign(['alloy_id']);
+        table.dropForeign(['section_id']);
+        table.dropForeign(['material_id']);
     })
 
     // @DROP BRANDS
@@ -178,10 +177,8 @@ export async function down(knex: Knex): Promise<void> {
 
     // @DROP GROUPINGS
     await knex.schema.alterTable('groupings', table=> {
-        table.dropForeign([
-            'section_id',
-            'material_id'
-        ])
+        table.dropForeign(['section_id']);
+        table.dropForeign(['material_id']);
     })
     
     // @DROP SHOPS
