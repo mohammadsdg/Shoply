@@ -1,10 +1,14 @@
 import type { Request, Response } from "express";
-import ShopProductsModel from "../models/shop-products.ts";
+import type ShopProductService from "../services/shop-products.ts";
 
 export default class ShopProductsController {
-    static async getAllShopProducts(_: Request, res: Response) {
+    private shopProductService;
+    constructor(shopProductService: ShopProductService) {
+        this.shopProductService = shopProductService
+    }
+    getAllShopProducts = async (_: Request, res: Response) => {
         try {
-            const result = await ShopProductsModel.getAllShopProduct();
+            const result = await this.shopProductService.getAllShopProducts();
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -27,7 +31,7 @@ export default class ShopProductsController {
         }
     }
 
-    static async getShopProduct(req: Request, res: Response) {
+    getShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);
         if (isNaN(shopProductId)) {
@@ -37,9 +41,8 @@ export default class ShopProductsController {
                 message: "Invalid ID"
             })
         }
-        console.log('s')
         try {
-            const result = await ShopProductsModel.getShopProduct(shopProductId);
+            const result = await this.shopProductService.getShopProduct(shopProductId);
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -62,7 +65,7 @@ export default class ShopProductsController {
         }
     }
 
-    static async setShopProduct(req: Request, res: Response) {
+    setShopProduct = async (req: Request, res: Response) => {
         const {shop_id, product_id} = req.body;
         if(shop_id === undefined 
             || shop_id === null 
@@ -80,7 +83,7 @@ export default class ShopProductsController {
             product_id
         }
         try {
-            const result = await ShopProductsModel.setShopProduct(allowedFields);
+            const result = await this.shopProductService.setShopProduct(allowedFields);
             return res.status(201).json({
                 success: true,
                 body: {
@@ -106,7 +109,7 @@ export default class ShopProductsController {
         }
     }
 
-    static async updateShopProduct(req: Request, res: Response) {
+    updateShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);
         const {shop_id, product_id} = req.body;
@@ -135,7 +138,7 @@ export default class ShopProductsController {
             product_id
         }
         try {
-            const result = await ShopProductsModel.updateShopProduct(allowedFields, shopProductId);
+            const result = await this.shopProductService.updateShopProduct(shopProductId, allowedFields);
             if (result) {
                 return res.status(200).json({
                     success: true,
@@ -170,7 +173,7 @@ export default class ShopProductsController {
         }
     }
 
-    static async deleteShopProduct(req: Request, res: Response) {
+    deleteShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);
         if(isNaN(shopProductId)) {
@@ -181,7 +184,7 @@ export default class ShopProductsController {
             })
         }
         try{
-            const result = await ShopProductsModel.deleteShopProduct(shopProductId);
+            const result = await this.shopProductService.deleteShopProduct(shopProductId);
             if (result) {
                 return res.status(200).json({
                     success: true,

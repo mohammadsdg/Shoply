@@ -2,12 +2,15 @@
   "name": "shoply-backend-ts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc",
-    "node": "node dist/app.js"
+    "migration:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
+    "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
+    "migration:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
+    "build": "tsc && copyfiles package.json package-lock.json dist",
+    "node": "node app.js"
   },
   "author": "",
   "license": "MIT",
@@ -15,8 +18,10 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/knex": "^0.15.2",
     "@types/node": "^24.4.0",
     "colors": "^1.4.0",
+    "copyfiles": "^2.4.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"
   },
@@ -25,6 +30,9 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "mysql2": "^3.14.5"
+    "knex": "^3.1.0",
+    "mysql2": "^3.14.5",
+    "tree-cli": "^0.6.7",
+    "ts-node-register": "^1.0.0"
   }
 }

@@ -1,10 +1,15 @@
 import type { Request, Response } from "express";
-import UsersModel from "../models/users.ts";
+import type UserService from "../services/users.ts";
+import type { IUserInput } from "../types/users.ts";
 
 export default class UsersController {
-    static async getAllUsers(req: Request, res: Response) {
+    private userService: UserService;
+    constructor(userService: UserService) {
+        this.userService = userService
+    }
+    getAllUsers = async (req: Request, res: Response) => {
         try{
-            const result = await UsersModel.getAllUsers();
+            const result = await this.userService.getAllUsers();
             res.status(200).json({
                 success: true,
                 body: result,
@@ -21,20 +26,20 @@ export default class UsersController {
         }
     }
 
-    static async getUser(req: Request, res: Response) {
-        const {user, password} = req.body;
-        if(!user || !password) {
+    getUser = async (req: Request, res: Response) => {
+        const {username, password} = req.body;
+        if(!username || !password) {
             res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        const allowedFields = {
-            user
+        const userData = {
+            username
         }
         try{
-            const result = await UsersModel.getUser(allowedFields);
+            const result = await this.userService.getUser(userData);
             if(result) {
                 const {password, ...userWithoutPassword} = result;
                 res.status(200).json({
@@ -53,25 +58,25 @@ export default class UsersController {
         }
     }
 
-    static async setUser(req: Request, res: Response) {
-        let {user, password, role} = req.body;
+    setUser = async (req: Request, res: Response) => {
+        let {username, password, role} = req.body;
         // Setting default role 
         role = role || "user"
         // Check if user and password has been sent
-        if(!user || !password) {
+        if(!username || !password) {
             res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        const allowedFields = {
-            user,
+        const userData: IUserInput = {
+            username,
             password,
             role
         }
         try{
-            const result = await UsersModel.setUser(allowedFields);
+            const result = await this.userService.setUser(userData)
             if(typeof result === "string") {
                 return res.status(409).json({
                     success: false,
@@ -83,7 +88,7 @@ export default class UsersController {
                     success: true,
                     body: {
                         ID: result,
-                        user,
+                        username,
                         role
                     },
                     message: "User created successfully"

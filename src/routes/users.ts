@@ -1,9 +1,13 @@
 import express from "express";
 import UsersController from "../controllers/users.ts";
+import UserService from "../services/users.ts";
 const router = express.Router();
 
-router.get("/users", UsersController.getAllUsers)
-router.post("/users/login", UsersController.getUser);
-router.post("/users/register", UsersController.setUser);
+const userService = new UserService();
+const userController = new UsersController(userService);
+
+router.get("/users", userController.getAllUsers)
+router.post("/users/login", userController.getUser);
+router.post("/users/register", userController.setUser);
 
 export default router;

@@ -1,9 +1,14 @@
 import express from "express";
 import ProductsSizeController from "../controllers/products-size.ts";
+import ProductSizeService from "../services/products-size.ts";
+import StockItemService from "../services/stock-items.ts";
 const router = express.Router();
 
-router.get("/products-size", ProductsSizeController.getAllProducts);
-router.get("/products-size/:id", ProductsSizeController.getProduct);
-router.post("/products-size", ProductsSizeController.setProduct);
+const stockItemService = new StockItemService();
+const productSizeService = new ProductSizeService();
+const productSize = new ProductsSizeController(productSizeService, stockItemService);
+router.get("/products-size", productSize.getAllProducts);
+router.get("/products-size/:id", productSize.getProduct);
+router.post("/products-size", productSize.setProduct);
 
 export default router;

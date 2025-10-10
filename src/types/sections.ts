@@ -1,14 +1,14 @@
-export interface IGetSectionData extends ISetSectionData {
-    ID: number | null,
+export interface ISectionData {
+    ID: number,
+    name: string,
+    params: string,
+    param_one: string,
+    param_two?: string | null,
+    param_three?: string | null,
+    created_at: Date,
+    updated_at: Date,
+    status: number
 }
 
-export interface ISetSectionData {
-    name: string,
-    params: number,
-    param_one: number,
-    param_two?: number | null,
-    param_three?: number | null,
-    created_at?: Date,
-    updated_at?: Date,
-    status?: number
-}
+export type TCreateSection = Omit<ISectionData, 'ID' | 'created_at' | 'updated_at' | 'status'>
+export type TUpdateSection = Partial<TCreateSection>

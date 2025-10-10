@@ -1,6 +1,10 @@
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
+
 import materialsRoutes from "./routes/materials.ts";
 import sectionsRoute from "./routes/sections.ts";
 import usersRoute from "./routes/users.ts";
@@ -17,6 +21,10 @@ import stockItemsRoute from "./routes/stock-items.ts";
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "5000");
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 app.use(express.json());
 app.use(cors());
@@ -37,5 +45,4 @@ app.use("/api/v1", stockItemsRoute);
 // start the server
 app.listen(PORT, ()=> {
     console.log(`Server is running on PORT ${PORT}`.cyan.underline);
-    
 })

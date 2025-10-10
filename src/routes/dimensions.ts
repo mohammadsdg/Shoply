@@ -1,11 +1,14 @@
 import express from "express";
 import DimensionsController from "../controllers/dimensions.ts";
+import DimensionService from "../services/dimensions.ts";
 const router = express.Router();
 
-router.get("/dimensions", DimensionsController.getAllDimensions);
-router.get("/dimensions/:id", DimensionsController.getDimension);
-router.post("/dimensions", DimensionsController.setDimension);
-router.put("/dimensions/:id", DimensionsController.updateDimension);
-router.delete("/dimensions/:id", DimensionsController.deleteDimension);
+const dimensionService = new DimensionService();
+const dimensionsController = new DimensionsController(dimensionService);
+router.get("/dimensions", dimensionsController.getAllDimensions);
+router.get("/dimensions/:id", dimensionsController.getDimension);
+router.post("/dimensions", dimensionsController.setDimension);
+router.put("/dimensions/:id", dimensionsController.updateDimension);
+router.delete("/dimensions/:id", dimensionsController.deleteDimension);
 
 export default router;

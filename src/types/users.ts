@@ -1,18 +1,16 @@
-export interface IGetUserParams {
-    user: string
-}
-
-export interface ISetUserParams extends IGetUserParams {
+export interface IUserData {
+    ID: number,
+    username: string,
     password: string,
-    role: string
+    role: string,
+    shop_id: number,
+    created_at: Date,
+    updated_at: Date,
+    status: number
 }
 
-export interface IGetUserData {
-    ID?: number | null,
-    user: string,
-    password: string,
-    role: string | null,
-    shop_id: number | null
+export interface IUserInput {
+    username: string,
+    password?: string,
+    role?: string
 }
-
-export type TUserSafeData = Omit<IGetUserData, "password">

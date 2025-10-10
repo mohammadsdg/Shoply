@@ -1,18 +1,15 @@
-import SectionsModel from "../models/sections.ts"
 import type { Response, Request } from "express";
-
-interface ISetSectionData {
-    name: string,
-    params: number,
-    param_one: number,
-    param_two?: number | null,
-    param_three?: number | null
-}
+import SectionService from "../services/sections.ts";
+import type { TCreateSection, TUpdateSection } from "../types/sections.ts";
 
 export default class SectionsController {
-    static async getAllSections(_: Request, res: Response) {
+    private sectionService: SectionService;
+    constructor(sectionService: SectionService) {
+        this.sectionService = sectionService
+    }
+    getAllSections = async (_: Request, res: Response) => {
         try{
-            const result = await SectionsModel.getAllSections();
+            const result = await this.sectionService.getAllSection()
             res.status(200).json({
                 success: true,
                 body: result,
@@ -37,8 +34,9 @@ export default class SectionsController {
         }
     }
 
-    static async getSection(req: Request, res: Response) {
+    getSection = async (req: Request, res: Response) => {
         const {id} = req.params;
+        const sectionId = Number(id);
         if(!id) {
             res.status(400).json({
                 success: false,
@@ -47,7 +45,7 @@ export default class SectionsController {
             })
         }
         try{
-            const result = await SectionsModel.getSection(id);
+            const result = await this.sectionService.getSection(sectionId);
             if(result) {
                 res.status(200).json({
                     success: true,
@@ -74,9 +72,9 @@ export default class SectionsController {
         }
     }
 
-    static async setSection(req: Request, res: Response) {
+    setSection = async (req: Request, res: Response) => {
         const {name, params, param_one, param_two, param_three} = req.body;
-        const allowedFields: ISetSectionData = {
+        const allowedFields: TCreateSection = {
             name,
             params,
             param_one,
@@ -114,7 +112,7 @@ export default class SectionsController {
             }
         }
         try{
-            const result = await SectionsModel.setSection(allowedFields);
+            const result = await this.sectionService.setSection(allowedFields)
             if (result) {
                 res.status(201).json({
                     success: true,
@@ -136,10 +134,11 @@ export default class SectionsController {
         }
     }
 
-    static async updateSection(req: Request, res: Response) {
+    updateSection = async (req: Request, res: Response) => {
         const {name, params, param_one, param_two, param_three} = req.body;
         const {id} = req.params;
-        const allowedFields: ISetSectionData = {
+        const sectionId = Number(id);
+        const allowedFields: TUpdateSection = {
             name,
             params,
             param_one,
@@ -189,7 +188,7 @@ export default class SectionsController {
         }
         try{
 
-            const result = await SectionsModel.updateSection(allowedFields, id);
+            const result = await this.sectionService.updateSection(sectionId, allowedFields)
             if(result){ 
                 res.status(200).json({
                     success: true,
@@ -218,10 +217,11 @@ export default class SectionsController {
         }
     }
 
-    static async deleteSection(req: Request, res: Response) {
+    deleteSection = async (req: Request, res: Response) => {
         const {id} = req.params;
+        const sectionId = Number(id);
         try{
-            const result = await SectionsModel.deleteSection(id);
+            const result = await this.sectionService.deleteSection(sectionId);
             if(result) {
                 res.status(200).json({
                     success: true,

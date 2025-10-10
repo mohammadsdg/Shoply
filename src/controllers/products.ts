@@ -1,9 +1,15 @@
 import type { Request, Response } from "express";
-import ProductsModel from "../models/products.ts";
-export default class ProductsController {
-    static async getAllProducts(_: Request, res: Response) {
+import ProductService from "../services/products.ts";
+
+export default class ProductController {
+    private productService: ProductService;
+    constructor(productService: ProductService) {
+        this.productService = productService
+    }
+
+    getAllProducts = async (_: Request, res: Response) => {
         try {
-            const result = await ProductsModel.getAllProducts();
+            const result = await this.productService.getAllProducts();
             res.status(200).json({
                 success: true,
                 body: result,
@@ -26,7 +32,7 @@ export default class ProductsController {
         }
     }
 
-    static async getProduct(req: Request, res: Response) {
+    getProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const productId = Number(id);
         if(isNaN(productId)) {
@@ -37,7 +43,7 @@ export default class ProductsController {
             })
         }
         try {
-            const result = await ProductsModel.getProduct(productId);
+            const result = await this.productService.getProduct(productId);
             if(result) {
                 res.status(200).json({
                     success: true,
@@ -69,7 +75,7 @@ export default class ProductsController {
         }
     }
 
-    static async setProduct(req: Request, res: Response) {
+    setProduct = async (req: Request, res: Response) => {
         const {
             alloy_id,
             section_id,
@@ -84,7 +90,7 @@ export default class ProductsController {
                 message: "Invalid request"
             })
         }
-        const requiredFields = {
+        const productData = {
             alloy_id,
             section_id,
             brand_id,
@@ -92,13 +98,13 @@ export default class ProductsController {
             material_id
         }
         try {
-            const result = await ProductsModel.setProduct(requiredFields);
+            const result = await this.productService.setProduct(productData)
             if (result) {
                 res.status(201).json({
                     success: true,
                     body: {
                         ID: result,
-                        ...requiredFields
+                        ...productData
                     },
                     message: "new product created successfully"
                 })
@@ -120,7 +126,7 @@ export default class ProductsController {
         }
     }
 
-    static async updateProduct(req: Request, res: Response) {
+    updateProduct = async (req: Request, res: Response) => {
         const {
             alloy_id,
             section_id,
@@ -137,7 +143,7 @@ export default class ProductsController {
                 message: "Invalid request"
             })
         }
-        const allowedFields = {
+        const productData = {
             alloy_id,
             section_id,
             brand_id,
@@ -145,7 +151,15 @@ export default class ProductsController {
             material_id
         }
         try {
-            const result = await ProductsModel.updateProduct(allowedFields, productId);
+            const result = await this.productService.updateProduct(productId, productData)
+            return res.status(200).json({
+                success: false,
+                body: {
+                    ID: productId,
+                    ...productData
+                },
+                message: `product ${productId} updated successfully`
+            })
         }
         catch (err) {
             if(err instanceof Error) {
@@ -163,7 +177,7 @@ export default class ProductsController {
         }
     }
 
-    static async deleteProduct(req: Request, res: Response) {
+    deleteProduct = async (req: Request, res: Response) => {
         try {
             const {id} = req.params;
             const productId = Number(id);
@@ -174,7 +188,7 @@ export default class ProductsController {
                     message: "Invalid ID"
                 })
             }
-            const result = await ProductsModel.deleteProduct(productId);
+            const result = await this.productService.deleteProduct(productId);
             if (result) {
                 return res.status(200).json({
                     success: true,
@@ -198,11 +212,11 @@ export default class ProductsController {
                     message: err.message
                 })
             }
+            return res.status(500).json({
+                success: false,
+                body: null,
+                message: "Unknown error"
+            })
         }
-        return res.status(500).json({
-            success: false,
-            body: null,
-            message: "Unknown error"
-        })
     }
 }
