@@ -32,4 +32,4 @@ jobs:
 
       # 5. Run tests
       - name: Run tests
-        run: npm start
+        run: npm run start
