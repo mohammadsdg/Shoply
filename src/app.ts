@@ -35,7 +35,7 @@ app.use("/api/v1", productsRoute);
 app.use("/api/v1", shopProductsRoute);
 app.use("/api/v1", productsSizeRoute);
 app.use("/api/v1", stockItemsRoute);
-
+console.log('hello')
 // start the server
 app.listen(PORT, ()=> {
     console.log(`Server is running on PORT ${PORT}`.cyan.underline);
