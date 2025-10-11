@@ -10,7 +10,7 @@
     "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "migration:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
     "build": "tsc && copyfiles package.json package-lock.json dist",
-    "node": "node dist/app.js"
+    "start": "node dist/app.js"
   },
   "author": "",
   "license": "MIT",
