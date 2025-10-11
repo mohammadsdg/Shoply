@@ -19,14 +19,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
 
-      # 3. Install dependencies
+      # 3. Install dependencies (inside your subfolder)
       - name: Install dependencies
+        working-directory: ./api.ts.miranna.ir
         run: npm ci
 
       # 4. Build TypeScript automatically
       - name: Build TypeScript
+        working-directory: ./api.ts.miranna.ir
         run: npm run build
 
-       # 5. Run tests
-      - name: Run tests
-        run: npm run node
+       # 5. Debug: list built files to confirm
+      - name: List dist folder
+        working-directory: ./api.ts.miranna.ir
+        run: ls -R dist
+
+      # 6. Run Node app or tests
+      - name: Run Node app
+        working-directory: ./api.ts.miranna.ir
+        run: npm run start
+        # OR if you want to run tests instead:
+        # run: npm test
