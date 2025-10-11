@@ -1,0 +1,18 @@
+on: [push]
+
+jobs: 
+  test:
+    runs-on: [ubuntu-22.04, ubuntu-latest]
+
+    steps:
+    - name: checkout code
+      run: |
+        git clone https://github.com/Pergina/shoply_ts.git
+        mv shoply_ts.git{.,}* .
+        
+      
+    - name: Install npm depencency
+      run: npm i
+
+    - name: Run tests
+      run: npm node
