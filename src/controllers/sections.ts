@@ -8,6 +8,7 @@ export default class SectionsController {
         this.sectionService = sectionService
     }
     getAllSections = async (_: Request, res: Response) => {
+        console.log('sssss')
         try{
             const result = await this.sectionService.getAllSection()
             res.status(200).json({

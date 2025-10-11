@@ -11,7 +11,6 @@ async function testConnection() {
     try {
         await db.raw('SELECT 1');
         console.log('Database connection successfull');
-        process.exit(0);
     }
     catch(err) {
         console.error('Database failed t o connect')
