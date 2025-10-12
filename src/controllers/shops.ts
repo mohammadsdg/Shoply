@@ -6,6 +6,7 @@ export default class ShopsController {
     constructor(shopService: ShopService) {
         this.shopService = shopService
     }
+    // Get all the shops
     getAllShops = async (_: Request, res: Response) => {
         try{
             const result = await this.shopService.getAllShops();
@@ -26,6 +27,7 @@ export default class ShopsController {
         }
     }
     
+    // Get shop by id
     getShop = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopId = Number(id);
@@ -64,6 +66,7 @@ export default class ShopsController {
         }
     }
 
+    // Create shop by user_id, name, phone
     setShop = async (req: Request, res: Response) => {
         const {user_id, name, phone} = req.body;
         const allowedFields = [user_id, name, phone];
@@ -80,15 +83,25 @@ export default class ShopsController {
             phone
         }
         try{
-            const result = await this.shopService.setShop(shopData);
-            return res.status(201).json({
-                success: true,
-                body: {
-                    ID: result,
-                    ...shopData
-                },
-                message: "A shop created successfully"
-            })
+            const createdShopId = await this.shopService.setShop(shopData);
+            console.log(createdShopId)
+            if(createdShopId) {
+                return res.status(201).json({
+                    success: true,
+                    body: {
+                        ID: createdShopId,
+                        ...shopData
+                    },
+                    message: "A shop created successfully"
+                })
+            }
+            else {
+                return res.status(409).json({
+                    success: false,
+                    body: null,
+                    message: "Conflict, there is another shop for this user"
+                })
+            }
         }
         catch(err) {
             if(err instanceof Error) {
@@ -96,6 +109,13 @@ export default class ShopsController {
                     success: false,
                     body: null,
                     message: err.message
+                })
+            }
+            else {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: "Unknown message"
                 })
             }
         }

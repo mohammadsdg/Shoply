@@ -13,10 +13,15 @@ export default class ShopDao {
         
     }
 
-    async create(data: TCreateShop): Promise<number | undefined> {
+    async create(data: TCreateShop): Promise<number | null> {
         const [insertId] = await db<IShopData>('shops')
             .insert(data);
-        return insertId;
+        if(insertId) {
+            return insertId;
+        }
+        else {
+            return null
+        }
     }
 
     async update(id: number, data: TUpdateShop): Promise<number | undefined> {

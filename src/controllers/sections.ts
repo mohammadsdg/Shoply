@@ -128,7 +128,6 @@ export default class SectionsController {
             })
         }
         try{
-
             const result = await this.sectionService.updateSection(sectionId, allowedFields)
             if(result){ 
                 return res.status(200).json({

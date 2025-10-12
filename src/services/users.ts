@@ -14,4 +14,8 @@ export default class UserService {
     async setUser(data: IUserInput) {
         return this.userDao.setUser(data);
     }
+
+    async setRole(data: IUserInput) {
+        return this.userDao.setRole(data);
+    }
 }

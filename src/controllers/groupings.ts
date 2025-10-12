@@ -8,7 +8,7 @@ export default class GroupingsController {
     getAllGroupings = async (_: Request, res: Response) => {
         try {
             const result = await this.groupingService.getAllGroupings()
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 body: result,
                 message: "All groupings fetched successfully"
@@ -34,7 +34,7 @@ export default class GroupingsController {
         const {id} = req.params;
         const groupingId = Number(id);
         if (isNaN(groupingId)) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invlaid ID"
@@ -44,14 +44,14 @@ export default class GroupingsController {
         try {
             const result = await this.groupingService.getGrouping(groupingId);
             if (result) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: result,
                     message: `grouping ${groupingId} fetched successfully`
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: "No grouping found."
@@ -77,7 +77,7 @@ export default class GroupingsController {
     postGrouping = async (req: Request, res: Response) => {
         const {name, section_id, material_id} = req.body;
         if (!name || !section_id || !material_id) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: true,
                 body: null,
                 message: "Invalid request"
@@ -90,7 +90,7 @@ export default class GroupingsController {
         };
         try {
             const result = await this.groupingService.setGrouping(groupingData);
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 body: {
                     ID: result,
@@ -120,7 +120,7 @@ export default class GroupingsController {
         const {id} = req.params;
         const groupingId = Number(id);
         if (!name || !section_id || !material_id) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: true,
                 body: null,
                 message: "Invalid request"
@@ -135,7 +135,7 @@ export default class GroupingsController {
         try {
             const result = await this.groupingService.updateGrouping(groupingId, groupingData);
             if (result) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: {
                         ID: result,
@@ -145,7 +145,7 @@ export default class GroupingsController {
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: "No grouping found to update with this ID"
@@ -174,14 +174,14 @@ export default class GroupingsController {
         try {
             const result = await this.groupingService.deleteGrouping(groupingId);
             if (result) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: groupingId,
                     message: `grouping ${groupingId} deleted successfully`
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: `No grouping found.`

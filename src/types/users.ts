@@ -10,6 +10,7 @@ export interface IUserData {
 }
 
 export interface IUserInput {
+    ID?: number,
     username: string,
     password?: string,
     role?: string

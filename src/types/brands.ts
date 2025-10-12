@@ -2,7 +2,7 @@ export interface IBrandData {
     ID: number,
     user_id: number,
     name: string,
-    info: string,
+    info?: string,
     status: number,
     created_at: Date,
     updated_at: Date

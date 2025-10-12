@@ -61,8 +61,8 @@ export default class BrandController {
 
     // Create brand with user_id, name, info
     setBrand = async (req: Request, res: Response) => {
-        const {user_id, name, info} = req.body;
-        if(!user_id || !name || !info) {
+        const {user_id, name} = req.body;
+        if(!user_id || !name) {
             res.status(400).json({
                 success: false,
                 body: null,
@@ -71,8 +71,7 @@ export default class BrandController {
         }
         const brandFields = {
             user_id,
-            name,
-            info
+            name
         }
         try{
             const result = await this.brandService.setBrand(brandFields);
@@ -131,6 +130,13 @@ export default class BrandController {
                     message: err.message
                 })
             }
+            else {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: "Unknown Error"
+                })
+            }
         }
     }
 
@@ -162,11 +168,13 @@ export default class BrandController {
                     message: err.message
                 })
             }
-            return res.status(500).json({
-                success: false,
-                body: null,
-                message: "Unknown message"
-            })
+            else {
+                return res.status(500).json({
+                    success: false,
+                    body: null,
+                    message: "Unknown message"
+                })
+            }
         }
     }
 }
