@@ -1,5 +1,5 @@
-import MaterialDao from "../dao/materials.ts";
-import type { TCreateMaterial, TUpdateMaterial } from "../types/materials.ts";
+import MaterialDao from "../dao/materials.js";
+import type { TCreateMaterial, TUpdateMaterial } from "../types/materials.js";
 
 export default class MaterialService {
     private dao = new MaterialDao();

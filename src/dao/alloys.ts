@@ -1,7 +1,7 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-// import { pool } from "../config/db.ts";
-import type { IAlloyData, TCreateAlloyInput, TUpdateAlloyInput } from "../types/alloys.ts";
-import { db } from "../config/db.ts";
+// import { pool } from "../config/db.js";
+import type { IAlloyData, TCreateAlloyInput, TUpdateAlloyInput } from "../types/alloys.js";
+import { db } from "../config/db.js";
 
 export default class AlloysDao {
     // Get All Alloys

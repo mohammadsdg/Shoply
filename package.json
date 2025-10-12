@@ -9,7 +9,7 @@
     "migration:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
     "migration": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "migration:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
-    "build": "tsc && copyfiles package.json package-lock.json dist",
+    "build": "tsc",
     "start": "node dist/app.js"
   },
   "author": "",

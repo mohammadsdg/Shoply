@@ -3,18 +3,18 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 
-import materialsRoutes from "./routes/materials.ts";
-import sectionsRoute from "./routes/sections.ts";
-import usersRoute from "./routes/users.ts";
-import shopsRoute from "./routes/shops.ts"
-import brandsRoute from "./routes/brands.ts";
-import alloysRoute from "./routes/alloys.ts";
-import dimensionsRoute from "./routes/dimensions.ts";
-import groupingsRoute from "./routes/groupings.ts";
-import productsRoute from "./routes/products.ts";
-import shopProductsRoute from "./routes/shop-products.ts";
-import productsSizeRoute from "./routes/products-size.ts";
-import stockItemsRoute from "./routes/stock-items.ts";
+import materialsRoutes from "./routes/materials.js";
+import sectionsRoute from "./routes/sections.js";
+import usersRoute from "./routes/users.js";
+import shopsRoute from "./routes/shops.js"
+import brandsRoute from "./routes/brands.js";
+import alloysRoute from "./routes/alloys.js";
+import dimensionsRoute from "./routes/dimensions.js";
+import groupingsRoute from "./routes/groupings.js";
+import productsRoute from "./routes/products.js";
+import shopProductsRoute from "./routes/shop-products.js";
+import productsSizeRoute from "./routes/products-size.js";
+import stockItemsRoute from "./routes/stock-items.js";
 
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "8000");
@@ -35,7 +35,6 @@ app.use("/api/v1", productsRoute);
 app.use("/api/v1", shopProductsRoute);
 app.use("/api/v1", productsSizeRoute);
 app.use("/api/v1", stockItemsRoute);
-console.log('hello')
 // start the server
 app.listen(PORT, ()=> {
     console.log(`Server is running on PORT ${PORT}`.cyan.underline);

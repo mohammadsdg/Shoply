@@ -1,6 +1,6 @@
 import experss from "express";
-import ShopController from "../controllers/shops.ts";
-import ShopService from "../services/shops.ts";
+import ShopController from "../controllers/shops.js";
+import ShopService from "../services/shops.js";
 const router = experss.Router();
 
 const shopService = new ShopService();

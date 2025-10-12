@@ -1,15 +1,17 @@
 import "dotenv/config";
 import type { Knex } from "knex";
 
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
+
 const config: { [key: string]: Knex.Config} = {
   development: {
     client: 'mysql2',
     connection: {
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 3306,
-      database: process.env.DB_NAME || 'knex',
-      user:     process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '1234'
+      host: DB_HOST || 'localhost',
+      port: Number(DB_PORT) || 3306,
+      database: DB_NAME || 'knex',
+      user:     DB_USER || 'root',
+      password: DB_PASSWORD || '1234'
     },
     pool: {
       min: 2,
@@ -23,11 +25,11 @@ const config: { [key: string]: Knex.Config} = {
   production: {
     client: 'mysql2',
     connection: {
-      host:     'localhost',
-      port:     3306,
-      database: 'knex',
-      user:     'root',
-      password: '1234'
+      host:     DB_HOST || 'localhost',
+      port:     Number(DB_PORT) || 3306,
+      database: DB_NAME || 'knex',
+      user:     DB_USER || 'shoply_user',
+      password: DB_PASSWORD || '1234'
     },
     pool: {
       min: 2,

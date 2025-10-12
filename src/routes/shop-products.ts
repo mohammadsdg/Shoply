@@ -1,6 +1,6 @@
 import express from "express";
-import ShopProductController from "../controllers/shop-products.ts";
-import ShopProductService from "../services/shop-products.ts";
+import ShopProductController from "../controllers/shop-products.js";
+import ShopProductService from "../services/shop-products.js";
 const router = express.Router();
 
 const shopProductService = new ShopProductService();

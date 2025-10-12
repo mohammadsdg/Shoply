@@ -1,8 +1,8 @@
 
 import type { Response, Request } from "express";
-import MaterialService from "../services/materials.ts";
-import type { TCreateMaterial } from "../types/materials.ts";
-import type { TUpdateAlloyInput } from "../types/alloys.ts";
+import MaterialService from "../services/materials.js";
+import type { TCreateMaterial } from "../types/materials.js";
+import type { TUpdateAlloyInput } from "../types/alloys.js";
 
 export default class MaterialController {
     private materialService: MaterialService
@@ -124,7 +124,6 @@ export default class MaterialController {
         }
         try{
             const result = await this.materialService.updateMaterial(materialId, materialData);
-            console.log(result)
             if(result) {
                 return res.status(200).json({
                     success: true,

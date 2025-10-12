@@ -1,5 +1,5 @@
-import StockItemDao from "../dao/stock-items.ts";
-import type { TCreateStockItem, TUpdateStockItem } from "../types/stock-items.ts";
+import StockItemDao from "../dao/stock-items.js";
+import type { TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
 
 export default class StockItemService {
     private stockItemDao = new StockItemDao();

@@ -1,11 +1,12 @@
 import type {Request, Response} from "express";
-import BrandService from "../services/brands.ts";
+import BrandService from "../services/brands.js";
 
 export default class BrandController {
     private brandService: BrandService;
     constructor(brandService: BrandService) {
         this.brandService = brandService
     }
+    // Get all brands
     getAllBrands = async (_: Request, res: Response) => {
         try{
             const result = await this.brandService.getAllBrands();
@@ -26,6 +27,7 @@ export default class BrandController {
         }
     }
 
+    // Get one brand by id
     getBrand = async (req: Request, res: Response) => {
         const {id} = req.params;
         const brandId = Number(id);
@@ -57,6 +59,7 @@ export default class BrandController {
         }
     }
 
+    // Create brand with user_id, name, info
     setBrand = async (req: Request, res: Response) => {
         const {user_id, name, info} = req.body;
         if(!user_id || !name || !info) {
@@ -93,11 +96,12 @@ export default class BrandController {
         }
     }
 
+    // Update brand with 
     updateBrand = async (req: Request, res: Response) => {
         const {id} = req.params;
         const brandId = Number(id);
-        const {name, info, status} = req.body;
-        if(!name || !info || !status || !id) {
+        const {name, info} = req.body;
+        if(!name || !info || !id) {
             return res.status(400).json({
                 success: false,
                 body: null,
@@ -107,7 +111,6 @@ export default class BrandController {
         const brandData = {
             name,
             info,
-            status
         }
         try{
             const result = await this.brandService.updateBrand(brandId, brandData);

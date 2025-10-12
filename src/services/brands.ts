@@ -1,5 +1,5 @@
-import BrandDao from "../dao/brands.ts";
-import type { IBrandData, TCreateBrandInput, TUpdateBrandParams } from "../types/brands.ts";
+import BrandDao from "../dao/brands.js";
+import type { IBrandData, TCreateBrandInput, TUpdateBrandParams } from "../types/brands.js";
 
 export default class BrandService {
     private dao = new BrandDao();

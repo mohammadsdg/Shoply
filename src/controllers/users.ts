@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
-import type UserService from "../services/users.ts";
-import type { IUserInput } from "../types/users.ts";
+import type UserService from "../services/users.js";
+import type { IUserInput } from "../types/users.js";
+import bcrypt from "bcryptjs";
 
 export default class UsersController {
     private userService: UserService;
@@ -29,7 +30,7 @@ export default class UsersController {
     getUser = async (req: Request, res: Response) => {
         const {username, password} = req.body;
         if(!username || !password) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
@@ -40,17 +41,24 @@ export default class UsersController {
         }
         try{
             const result = await this.userService.getUser(userData);
-            if(result) {
+            if(result?.username && (await bcrypt.compare(password, result.password))) {
                 const {password, ...userWithoutPassword} = result;
-                res.status(200).json({
+                return res.status(200).json({
                     success: false,
                     body: userWithoutPassword,
                     message: `user ${result.ID} fetched successfully`
                 })
             }
+            else {
+                return res.status(404).json({
+                    success: false,
+                    body: null,
+                    message: "No user found with this username and password"
+                })
+            }
         }
         catch(err) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 body: null,
                 message: "Internal server error"
@@ -63,40 +71,43 @@ export default class UsersController {
         // Setting default role 
         role = role || "user"
         // Check if user and password has been sent
-        if(!username || !password) {
-            res.status(400).json({
+        if (username === undefined || username === null || 
+            password === undefined || password === null) {
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPass = await bcrypt.hash(password, salt);
+        
         const userData: IUserInput = {
             username,
-            password,
+            password: hashedPass,
             role
         }
         try{
-            const result = await this.userService.setUser(userData)
-            if(typeof result === "string") {
+            // Get user with username checking if another username exists with this name
+            const selectedUser = await this.userService.getUser(userData)
+            if(selectedUser?.username) {
                 return res.status(409).json({
                     success: false,
                     body: null,
-                    message: result
+                    message: "Conflict, There is another username like this"
                 })
-            } else {
+            }
+            const createdUser = await this.userService.setUser(userData);
+            if(createdUser) {
                 return res.status(201).json({
                     success: true,
-                    body: {
-                        ID: result,
-                        username,
-                        role
-                    },
-                    message: "User created successfully"
+                    body: createdUser,
+                    message: "username created successfully"
                 })
             }
         }
         catch(err) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 body: null,
                 message: "Internal server error"

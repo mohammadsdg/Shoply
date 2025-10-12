@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import DimensionService from "../services/dimensions.ts";
+import DimensionService from "../services/dimensions.js";
 
 export default class DimensionsController {
     private dimensionService: DimensionService;

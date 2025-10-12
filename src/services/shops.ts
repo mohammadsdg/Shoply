@@ -1,5 +1,5 @@
-import ShopDao from "../dao/shops.ts"
-import type { TCreateShop, TUpdateShop } from "../types/shops.ts";
+import ShopDao from "../dao/shops.js"
+import type { TCreateShop, TUpdateShop } from "../types/shops.js";
 
 export default class ShopService {
     private shopDao = new ShopDao();

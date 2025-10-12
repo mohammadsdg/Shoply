@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type ShopProductService from "../services/shop-products.ts";
+import type ShopProductService from "../services/shop-products.js";
 
 export default class ShopProductsController {
     private shopProductService;

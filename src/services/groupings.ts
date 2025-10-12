@@ -1,5 +1,5 @@
-import GroupingDao from "../dao/groupings.ts"
-import type { TCreateGrouping, TUpdateGrouping } from "../types/groupings.ts";
+import GroupingDao from "../dao/groupings.js"
+import type { TCreateGrouping, TUpdateGrouping } from "../types/groupings.js";
 
 export default class GroupingService {
     private groupingDao = new GroupingDao();

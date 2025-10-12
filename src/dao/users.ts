@@ -1,5 +1,7 @@
-import { db } from "../config/db.ts";
-import type { IUserData, IUserInput } from "../types/users.ts";
+import { db } from "../config/db.js";
+import type { IUserData, IUserInput } from "../types/users.js";
+
+type IUserReturn = { ID: number; username: string; password?: string; role?: string } | null;
 
 export default class UserDao {
     async getAllUsers() {
@@ -12,9 +14,16 @@ export default class UserDao {
             .first()
     }
 
-    async setUser(data: IUserInput) {
+    async setUser(data: IUserInput): Promise<IUserReturn> {
         const [insertId] = await db<IUserData>('users')
             .insert(data);
-        return insertId
+        if (insertId) {
+            return {
+                ID: insertId,
+                ...data
+            }
+        } else {
+            return null
+        }
     }
 }

@@ -1,6 +1,6 @@
 import type { ResultSetHeader } from "mysql2";
-import { db } from "../config/db.ts";
-import type { IDimensionData, TCreateDimensionInput, TUpdateDimensionInput } from "../types/dimensions.ts";
+import { db } from "../config/db.js";
+import type { IDimensionData, TCreateDimensionInput, TUpdateDimensionInput } from "../types/dimensions.js";
 
 export default class DimensionsDao {
     async getAll() {

@@ -1,7 +1,6 @@
 export interface ISectionData {
     ID: number,
     name: string,
-    params: string,
     param_one: string,
     param_two?: string | null,
     param_three?: string | null,

@@ -1,6 +1,6 @@
 import express from "express";
-import BrandController from "../controllers/brands.ts";
-import BrandService from "../services/brands.ts";
+import BrandController from "../controllers/brands.js";
+import BrandService from "../services/brands.js";
 const router = express.Router();
 
 const brandService = new BrandService();

@@ -1,5 +1,5 @@
-import UserDao from "../dao/users.ts"
-import type { IUserInput } from "../types/users.ts";
+import UserDao from "../dao/users.js"
+import type { IUserInput } from "../types/users.js";
 
 export default class UserService {
     private userDao = new UserDao();

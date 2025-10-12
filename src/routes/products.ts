@@ -1,6 +1,6 @@
 import express from "express";
-import ProductController from "../controllers/products.ts";
-import ProductService from "../services/products.ts";
+import ProductController from "../controllers/products.js";
+import ProductService from "../services/products.js";
 const router = express.Router();
 
 const productService = new ProductService();

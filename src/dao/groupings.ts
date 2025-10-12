@@ -1,5 +1,5 @@
-import { db } from "../config/db.ts";
-import type { IGroupingData, TCreateGrouping, TUpdateGrouping } from "../types/groupings.ts";
+import { db } from "../config/db.js";
+import type { IGroupingData, TCreateGrouping, TUpdateGrouping } from "../types/groupings.js";
 
 export default class GroupingDao {
     async getAll() {

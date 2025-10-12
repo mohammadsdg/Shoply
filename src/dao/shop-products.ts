@@ -1,5 +1,5 @@
-import { db } from "../config/db.ts";
-import type { IShopProductData, TCreateShopProduct, TUpdateShopProduct } from "../types/shop-products.ts";
+import { db } from "../config/db.js";
+import type { IShopProductData, TCreateShopProduct, TUpdateShopProduct } from "../types/shop-products.js";
 
 export default class ShopProductDao {
     async getAll() {

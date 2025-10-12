@@ -1,6 +1,6 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-import { db } from "../config/db.ts";
-import type { IBrandData, TCreateBrandInput, TUpdateBrandParams } from "../types/brands.ts";
+import { db } from "../config/db.js";
+import type { IBrandData, TCreateBrandInput, TUpdateBrandParams } from "../types/brands.js";
 
 export default class BrandDao {
     async getAll(): Promise<IBrandData[]> {

@@ -1,5 +1,5 @@
-import DimensionsDao from "../dao/dimensions.ts"
-import type { IDimensionData, TCreateDimensionInput, TUpdateDimensionInput } from "../types/dimensions.ts";
+import DimensionsDao from "../dao/dimensions.js"
+import type { IDimensionData, TCreateDimensionInput, TUpdateDimensionInput } from "../types/dimensions.js";
 
 export default class DimensionService {
     private dimensionDao = new DimensionsDao();

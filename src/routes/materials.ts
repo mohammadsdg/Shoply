@@ -1,6 +1,6 @@
 import experss from "express"
-import MaterialService from "../services/materials.ts";
-import MaterialController from "../controllers/materials.ts";
+import MaterialService from "../services/materials.js";
+import MaterialController from "../controllers/materials.js";
 const router = experss.Router();
 
 const materialService = new MaterialService();

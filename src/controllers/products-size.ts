@@ -1,8 +1,8 @@
 import type {Request, Response} from "express"
-import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.ts";
-import type { TCreateProductSize } from "../types/products-size.ts";
-import type ProductSizeService from "../services/products-size.ts";
-import StockItemService from "../services/stock-items.ts";
+import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.js";
+import type { TCreateProductSize } from "../types/products-size.js";
+import type ProductSizeService from "../services/products-size.js";
+import StockItemService from "../services/stock-items.js";
 
 export default class ProductsSizeController {
     private productsSizeService: ProductSizeService;
@@ -148,7 +148,6 @@ export default class ProductsSizeController {
                 break;
         }
         productSizeData.density = density;
-        console.log(productSizeData)
         try{
             const productSizeId = await this.productsSizeService.setProductSize(productSizeData)
             

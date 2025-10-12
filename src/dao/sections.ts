@@ -1,5 +1,5 @@
-import { db } from "../config/db.ts";
-import type { ISectionData, TCreateSection, TUpdateSection } from "../types/sections.ts";
+import { db } from "../config/db.js";
+import type { ISectionData, TCreateSection, TUpdateSection } from "../types/sections.js";
 
 export default class SectionDao {
     async getAll() {

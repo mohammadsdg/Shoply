@@ -1,5 +1,5 @@
-import ProductDao from "../dao/products.ts";
-import type { TCreateProduct, TUpdateProduct } from "../types/products.ts";
+import ProductDao from "../dao/products.js";
+import type { TCreateProduct, TUpdateProduct } from "../types/products.js";
 
 export default class Products {
     private productDao = new ProductDao();

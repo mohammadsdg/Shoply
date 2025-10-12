@@ -1,6 +1,6 @@
 import type { Response, Request } from "express";
-import SectionService from "../services/sections.ts";
-import type { TCreateSection, TUpdateSection } from "../types/sections.ts";
+import SectionService from "../services/sections.js";
+import type { TCreateSection, TUpdateSection } from "../types/sections.js";
 
 export default class SectionsController {
     private sectionService: SectionService;
@@ -8,10 +8,9 @@ export default class SectionsController {
         this.sectionService = sectionService
     }
     getAllSections = async (_: Request, res: Response) => {
-        console.log('sssss')
         try{
             const result = await this.sectionService.getAllSection()
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 body: result,
                 message: "All sections fetched successfully"
@@ -26,11 +25,11 @@ export default class SectionsController {
                 })
             }
             else if (error && typeof error === 'object' && 'message' in error) {
-                return {
+                return res.status(500).json({
                     success: false,
                     body: null,
                     message: error.message
-                }
+                })
             }
         }
     }
@@ -39,7 +38,7 @@ export default class SectionsController {
         const {id} = req.params;
         const sectionId = Number(id);
         if(!id) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
@@ -48,14 +47,14 @@ export default class SectionsController {
         try{
             const result = await this.sectionService.getSection(sectionId);
             if(result) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: result,
                     message: `Section ${id} fetched successfully`
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: `No section found with this ID`
@@ -64,7 +63,7 @@ export default class SectionsController {
         }
         catch(error) {
             if(error instanceof Error) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     body: null,
                     message: error.message
@@ -74,52 +73,28 @@ export default class SectionsController {
     }
 
     setSection = async (req: Request, res: Response) => {
-        const {name, params, param_one, param_two, param_three} = req.body;
-        const allowedFields: TCreateSection = {
+        const {name, param_one, param_two, param_three} = req.body;
+        const sectionData: TCreateSection = {
             name,
-            params,
             param_one,
-            param_two: null,
-            param_three: null
+            param_two,
+            param_three
         }
-        if (!name || !params || !param_one) {
-            res.status(400).json({
+        if (!name || !param_one) {
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        if (params===2) {
-            if(!param_two) {
-                res.status(400).json({
-                    success: false,
-                    body: null,
-                    message: "Invalid request"
-                })
-            } else {
-                allowedFields.param_two = param_two
-            }
-        }
-        if(params===3 && !param_three) {
-            if(!param_three) {
-                allowedFields.param_three = param_three
-            } 
-            else {
-                res.status(400).json({
-                    success: false,
-                    body: null,
-                    message: "Invalid request"
-                })
-            }
-        }
         try{
-            const result = await this.sectionService.setSection(allowedFields)
+            const result = await this.sectionService.setSection(sectionData)
             if (result) {
-                res.status(201).json({
+                return res.status(201).json({
                     success: true,
                     body: {
                         ID: result,
-                        ...allowedFields
+                        ...sectionData
                     },
                     message: "Section created successfully"
                 })
@@ -127,7 +102,7 @@ export default class SectionsController {
         }
         catch(error) {
             if(error instanceof Error)
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 body: null,
                 message: error.message
@@ -136,62 +111,27 @@ export default class SectionsController {
     }
 
     updateSection = async (req: Request, res: Response) => {
-        const {name, params, param_one, param_two, param_three} = req.body;
+        const {name, param_one, param_two, param_three} = req.body;
         const {id} = req.params;
         const sectionId = Number(id);
         const allowedFields: TUpdateSection = {
             name,
-            params,
             param_one,
-            param_two: null,
-            param_three: null
+            param_two,
+            param_three
         }
         if(!id) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        if (params===1) {
-            if(!param_one) {
-                res.status(400).json({
-                    success: false,
-                    body: null,
-                    message: "Invalid request"
-                })
-            } else {
-                allowedFields.param_one = param_one
-            }
-        }
-        if (params===2) {
-            if(!param_two) {
-                res.status(400).json({
-                    success: false,
-                    body: null,
-                    message: "Invalid request"
-                })
-            } else {
-                allowedFields.param_two = param_two
-            }
-        }
-        if(params===3) {
-            if(!param_three) {
-                res.status(400).json({
-                    success: false,
-                    body: null,
-                    message: "Invalid request"
-                })
-            } 
-            else {
-                allowedFields.param_three = param_three
-            }
-        }
         try{
 
             const result = await this.sectionService.updateSection(sectionId, allowedFields)
             if(result){ 
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: {
                         ID: result,
@@ -201,7 +141,7 @@ export default class SectionsController {
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: "No Section found"
@@ -210,7 +150,7 @@ export default class SectionsController {
         }
         catch(error) {
             if(error instanceof Error)
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 body: null,
                 message: error.message
@@ -224,14 +164,14 @@ export default class SectionsController {
         try{
             const result = await this.sectionService.deleteSection(sectionId);
             if(result) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     body: result,
                     message: `Section ${id} deleted`
                 })
             }
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: "No section found"
@@ -239,7 +179,7 @@ export default class SectionsController {
             }
         }
         catch(err) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 body: null,
                 message: "Invalid request"

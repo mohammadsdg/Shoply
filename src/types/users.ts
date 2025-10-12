@@ -3,10 +3,10 @@ export interface IUserData {
     username: string,
     password: string,
     role: string,
-    shop_id: number,
-    created_at: Date,
-    updated_at: Date,
-    status: number
+    shop_id?: number,
+    created_at?: Date,
+    updated_at?: Date,
+    status?: number
 }
 
 export interface IUserInput {

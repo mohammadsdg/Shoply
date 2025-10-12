@@ -1,6 +1,6 @@
 import express from "express";
-import UsersController from "../controllers/users.ts";
-import UserService from "../services/users.ts";
+import UsersController from "../controllers/users.js";
+import UserService from "../services/users.js";
 const router = express.Router();
 
 const userService = new UserService();

@@ -1,6 +1,6 @@
 import express from "express";
-import AlloysController from "../controllers/alloys.ts";
-import AlloyService from "../services/alloys.ts";
+import AlloysController from "../controllers/alloys.js";
+import AlloyService from "../services/alloys.js";
 const router = express.Router();
 
 const alloyService = new AlloyService();

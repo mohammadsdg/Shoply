@@ -1,6 +1,6 @@
 import express from "express";
-import GroupingsController from "../controllers/groupings.ts";
-import GroupingService from "../services/groupings.ts";
+import GroupingsController from "../controllers/groupings.js";
+import GroupingService from "../services/groupings.js";
 const router = express.Router();
 
 const groupingService = new GroupingService();

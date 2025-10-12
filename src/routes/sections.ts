@@ -1,6 +1,6 @@
 import express from "express";
-import SectionsController from "../controllers/sections.ts";
-import SectionService from "../services/sections.ts";
+import SectionsController from "../controllers/sections.js";
+import SectionService from "../services/sections.js";
 const router = express.Router();
 
 const sectionService = new SectionService();

@@ -1,5 +1,5 @@
-import ProductSizeDao from "../dao/products-size.ts";
-import type { TCreateProductSize, TUpdateProductSize } from "../types/products-size.ts";
+import ProductSizeDao from "../dao/products-size.js";
+import type { TCreateProductSize, TUpdateProductSize } from "../types/products-size.js";
 
 export default class ProductSizeService {
     private productSizeDao = new ProductSizeDao();

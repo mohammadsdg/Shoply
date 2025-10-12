@@ -1,6 +1,6 @@
 import express from "express";
-import StockItemsController from "../controllers/stock-items.ts";
-import StockItemService from "../services/stock-items.ts";
+import StockItemsController from "../controllers/stock-items.js";
+import StockItemService from "../services/stock-items.js";
 const router = express.Router();
 
 const stockItemService = new StockItemService();

@@ -1,5 +1,5 @@
-import SectionDao from "../dao/sections.ts"
-import type { TCreateSection, TUpdateSection } from "../types/sections.ts";
+import SectionDao from "../dao/sections.js"
+import type { TCreateSection, TUpdateSection } from "../types/sections.js";
 
 export default class SectionService {
     private sectionDao = new SectionDao();

@@ -1,4 +1,4 @@
-import AlloysDao from "../dao/alloys.ts";
+import AlloysDao from "../dao/alloys.js";
 import type { IAlloyData, TCreateAlloyInput, TUpdateAlloyInput } from "../types/alloys.ts";
 
 export default class AlloyService {

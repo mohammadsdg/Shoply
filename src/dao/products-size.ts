@@ -1,5 +1,5 @@
-import { db } from "../config/db.ts";
-import type { IProductSizeData, TCreateProductSize, TUpdateProductSize } from "../types/products-size.ts";
+import { db } from "../config/db.js";
+import type { IProductSizeData, TCreateProductSize, TUpdateProductSize } from "../types/products-size.js";
 
 export default class  ProductSizeDao {
     async getAll() {

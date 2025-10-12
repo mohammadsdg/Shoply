@@ -1,6 +1,6 @@
 import express from "express";
-import DimensionsController from "../controllers/dimensions.ts";
-import DimensionService from "../services/dimensions.ts";
+import DimensionsController from "../controllers/dimensions.js";
+import DimensionService from "../services/dimensions.js";
 const router = express.Router();
 
 const dimensionService = new DimensionService();

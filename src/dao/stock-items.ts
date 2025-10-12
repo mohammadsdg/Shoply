@@ -1,5 +1,5 @@
-import { db } from "../config/db.ts";
-import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.ts";
+import { db } from "../config/db.js";
+import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
 
 export default class StockItemDao {
     async getAll() {

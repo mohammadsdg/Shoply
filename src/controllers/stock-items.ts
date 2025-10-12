@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type StockItemService from "../services/stock-items.ts";
+import type StockItemService from "../services/stock-items.js";
 
 export default class StockItemsController {
     private stockItemService: StockItemService

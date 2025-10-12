@@ -1,5 +1,5 @@
-import { db, } from "../config/db.ts";
-import type { IMaterialData, TCreateMaterial, TUpdateMaterial } from "../types/materials.ts";
+import { db, } from "../config/db.js";
+import type { IMaterialData, TCreateMaterial, TUpdateMaterial } from "../types/materials.js";
 
 export default class MaterialDao {
     async getAll(): Promise<IMaterialData[]> {
