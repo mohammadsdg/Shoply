@@ -10,7 +10,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string('param_two', 45);
         table.string('param_three', 45);
         table.specificType('status', 'tinyint').defaultTo(10);
-        table.timestamps(true, true);
+        table.timestamp('created_at').defaultTo(knex.fn.now());
+        table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     })
 }
 

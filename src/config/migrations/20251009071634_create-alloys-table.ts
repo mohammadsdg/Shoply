@@ -7,8 +7,10 @@ export async function up(knex: Knex): Promise<void> {
         table.integer('material_id').notNullable();
         table.string('name', 20).defaultTo(null);
         table.string('code', 20).defaultTo(null);
+        table.string('cutting_speed', 20).defaultTo(null);
         table.specificType('status', 'tinyint');
-        table.timestamps(true, true);
+        table.timestamp('created_at').defaultTo(knex.fn.now());
+        table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     })
 }
 

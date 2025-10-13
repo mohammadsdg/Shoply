@@ -18,7 +18,7 @@ export default class ProductDao {
             .innerJoin('groupings', 'groupings.ID', 'products.grouping_id')
             .innerJoin('brands', 'brands.ID', 'products.brand_id')
             .innerJoin('alloys', 'alloys.ID', 'products.alloy_id');
-        return rows.length ? rows : false;
+        return rows.length ? rows : null;
     }
     
     async getById(id: number) {

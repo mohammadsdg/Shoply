@@ -3,8 +3,8 @@ import type { TCreateProductSize, TUpdateProductSize } from "../types/products-s
 
 export default class ProductSizeService {
     private productSizeDao = new ProductSizeDao();
-    async getAllProducts() {
-        return this.productSizeDao.getAll();
+    async getAllProducts(shop_id: number) {
+        return this.productSizeDao.getAll(shop_id);
     }
 
     async getProductSize(id: number) {

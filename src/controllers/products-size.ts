@@ -5,8 +5,10 @@ import type ProductSizeService from "../services/products-size.js";
 import StockItemService from "../services/stock-items.js";
 
 export default class ProductsSizeController {
+    // define ProductSizeService and StockItemService instances
     private productsSizeService: ProductSizeService;
     private stockItemService: StockItemService;
+
     constructor(
         productsSizeService: ProductSizeService,
         stockItemService: StockItemService
@@ -14,9 +16,15 @@ export default class ProductsSizeController {
         this.productsSizeService = productsSizeService
         this.stockItemService = stockItemService
     }
-    getAllProducts = async (_: Request, res: Response) => {
+
+    // Get all sizes of a product
+    getAllProducts = async (req: Request, res: Response) => {
+        const {shop_id} = req.query;
+        const shopId = Number(shop_id);
+        console.log(shopId)
         try {
-            const result = await this.productsSizeService.getAllProducts()
+            const result = await this.productsSizeService.getAllProducts(shopId);
+            console.log(result)
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -39,6 +47,7 @@ export default class ProductsSizeController {
         }
     }
 
+    // Get size for a product
     getProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const productSizeId: number = Number(id);
