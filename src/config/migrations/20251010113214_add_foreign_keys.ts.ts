@@ -3,6 +3,8 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     // @SHOPS_TABLE
     await knex.schema.alterTable('shops', table=> {
+        table.unique(['user_id']);
+        
         table
             .foreign('user_id')
             .references('ID')
@@ -13,6 +15,7 @@ export async function up(knex: Knex): Promise<void> {
 
     // @BRANDS_TABLE
     await knex.schema.alterTable('brands', table=> {
+        table.unique(['user_id']);
         table
             .foreign('user_id')
             .references('ID')
@@ -23,6 +26,8 @@ export async function up(knex: Knex): Promise<void> {
 
     // @SECTIONS_TABLE
     await knex.schema.alterTable('sections', table=> {
+        table.unique(['material_id']);
+
         table
             .foreign('material_id')
             .references('ID')
@@ -33,6 +38,8 @@ export async function up(knex: Knex): Promise<void> {
 
     // @DIMENSIONS_TABLE
     await knex.schema.alterTable('dimensions', table=> {
+        table.unique(['user_id']);
+
         table
             .foreign('user_id')
             .references('ID')
@@ -43,6 +50,8 @@ export async function up(knex: Knex): Promise<void> {
 
     // @GROUPING_TABLE
     await knex.schema.alterTable('groupings', table=> {
+        table.unique(['section_id', 'material_id']);
+
         table
             .foreign('section_id')
             .references('ID')
@@ -60,6 +69,14 @@ export async function up(knex: Knex): Promise<void> {
 
     // @PRODUCTS_TABLE
     await knex.schema.alterTable('products', table=> {
+        table.unique([
+            'section_id', 
+            'material_id', 
+            'alloy_id',
+            'grouping_id',
+             'brand_id'
+        ]);
+
         table
             .foreign('section_id')
             .references('ID')
@@ -98,6 +115,11 @@ export async function up(knex: Knex): Promise<void> {
 
     // @SHOP_PRODUCTS_TABLE
     await knex.schema.alterTable('shop_products', table=> {
+        table.unique([
+            'shop_id',
+            'product_id'
+        ]);
+
         table
             .foreign('shop_id')
             .references('ID')
@@ -114,6 +136,8 @@ export async function up(knex: Knex): Promise<void> {
 
     // @PRODUCTS_SIZE_TABLE
     await knex.schema.alterTable('products_size', table=> {
+        table.unique(['shop_products_id']);
+
         table
             .foreign('shop_products_id')
             .references('ID')
@@ -124,6 +148,8 @@ export async function up(knex: Knex): Promise<void> {
 
     // @STOCK_ITEMS_TABLE
     await knex.schema.alterTable('stock_items', table=> {
+        table.unique(['product_size_id']);
+        
         table
             .foreign('product_size_id')
             .references('ID')
