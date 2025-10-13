@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('param_one', 45);
         table.string('param_two', 45);
         table.string('param_three', 45);
-        table.specificType('status', 'tinyint');
+        table.specificType('status', 'tinyint').defaultTo(10);
         table.timestamps(true, true);
     })
 }

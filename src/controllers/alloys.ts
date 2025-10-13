@@ -6,6 +6,8 @@ export default class AlloysController {
     constructor(alloyService: AlloyService) {
         this.alloyService = alloyService
     }
+    
+    // Get all the alloys
     getAllAlloys = async (_:Request, res:Response) =>  {
         try{
             const result = await this.alloyService.getAllAlloys();
@@ -31,6 +33,7 @@ export default class AlloysController {
         }
     }
 
+    // Get alloy with ID
     getAlloy = async (req:Request, res:Response) => {
         const {id} = req.params;
         const alloyId = Number(id);
@@ -69,6 +72,7 @@ export default class AlloysController {
         }
     }
 
+    // Create alloy with material_id, name, code and cutting_speed
     setAlloy = async (req:Request, res:Response) => {
         const {material_id, name, code, cutting_speed} = req.body;
         if(!material_id || !name || !code || !cutting_speed) {
@@ -78,25 +82,31 @@ export default class AlloysController {
                 message: "Invalid request"
             })
         }
-        const allowedFileds = {
+        const alloyData = {
             material_id,
             name,
             code,
             cutting_speed
         }
         try{
-            const result = await this.alloyService.setAlloy(allowedFileds);
+            const result = await this.alloyService.setAlloy(alloyData);
             if (result) {
                 return res.status(201).json({
                     success: true,
                     body: {
                         ID: result,
-                        ...allowedFileds
+                        ...alloyData
                     },
                     message: "Alloy created successfully"
                 })
             }
-            
+            else {
+                return res.status(409).json({
+                    success: false,
+                    body: null,
+                    message: ""
+                })
+            }
         }
         catch(err) {
             if(err instanceof Error) {
@@ -109,6 +119,7 @@ export default class AlloysController {
         }
     }
 
+    // Update alloy with material_id, name, code and cutting_speed through ID
     updateAlloy = async (req:Request, res:Response) => {
         const {material_id, name, code, cutting_speed} = req.body;
         const {id} = req.params;
@@ -157,6 +168,7 @@ export default class AlloysController {
         }
     }
 
+    // Delete alloy with ID
     deleteAlloy = async (req:Request, res:Response) => {
         const {id} = req.params;
         const alloyId = Number(id);

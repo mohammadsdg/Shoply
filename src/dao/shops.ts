@@ -13,14 +13,14 @@ export default class ShopDao {
         
     }
 
-    async create(data: TCreateShop): Promise<number | null> {
-        const [insertId] = await db<IShopData>('shops')
-            .insert(data);
-        if(insertId) {
+    async create(data: TCreateShop): Promise<number | undefined> {
+        try {
+            const [insertId] = await db<IShopData>('shops')
+                .insert(data);
             return insertId;
         }
-        else {
-            return null
+        catch(err: any) {
+            throw err
         }
     }
 

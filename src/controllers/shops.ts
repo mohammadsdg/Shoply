@@ -84,40 +84,30 @@ export default class ShopsController {
         }
         try{
             const createdShopId = await this.shopService.setShop(shopData);
-            console.log(createdShopId)
-            if(createdShopId) {
-                return res.status(201).json({
-                    success: true,
-                    body: {
-                        ID: createdShopId,
-                        ...shopData
-                    },
-                    message: "A shop created successfully"
-                })
-            }
-            else {
+
+            return res.status(201).json({
+                success: true,
+                body: {
+                    ID: createdShopId,
+                    ...shopData
+                },
+                message: "A shop created successfully"
+            })
+        }
+        catch(err: any) {
+            // MySql duplicate key error
+            if(err.code === 'ER_DUP_ENTRY' || err.errno === 1062) {
                 return res.status(409).json({
                     success: false,
                     body: null,
-                    message: "Conflict, there is another shop for this user"
-                })
+                    message: "کاربر فقط یک فروشگاه میتواند داشته باشد"
+                });
             }
-        }
-        catch(err) {
-            if(err instanceof Error) {
-                return res.status(500).json({
-                    success: false,
-                    body: null,
-                    message: err.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    success: false,
-                    body: null,
-                    message: "Unknown message"
-                })
-            }
+            return res.status(500).json({
+                success: false,
+                body: null,
+                message: err.message || "Internal server error"
+            })
         }
     }
 

@@ -17,9 +17,14 @@ export default class AlloysDao {
             .first(); // returns the first row or undefined
     }
 
-    async create(data: TCreateAlloyInput): Promise<number | undefined> {
+    async create(data: TCreateAlloyInput): Promise<number | null> {
         const [insertId] = await db<IAlloyData>("alloys").insert(data);
-        return insertId;
+        if(insertId) {
+            return insertId
+        }
+        else {
+            return null
+        }
     }
 
     async update(id: number, data: TUpdateAlloyInput): Promise<number> {
