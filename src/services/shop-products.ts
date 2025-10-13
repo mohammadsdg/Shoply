@@ -8,8 +8,8 @@ export default class ShopProductService {
         return this.shopProductDao.getAll();
     }
 
-    async getShopProduct(id: number) {
-        return this.shopProductDao.getById(id);
+    async getShopProducts(id: number) {
+        return this.shopProductDao.getByShopId(id);
     }
 
     async setShopProduct(data: TCreateShopProduct) {

@@ -7,23 +7,36 @@ export default class ShopProductDao {
             .select('*');
     }
 
-    async getById(id: number) {
-        return db<IShopProductData>('shop_products')
-            .where({ ID: id })
-            .first()
+    // Select all products of a shop using left join
+    async getByShopId(id: number) {
+        return db<IShopProductData>({ sp: 'shop_products' })
+            .leftJoin({ p: 'products' }, 'sp.product_id', 'p.ID')
+            .select('sp.*', 'p.section_id')
+            .where("sp.shop_id", id);
     }
 
     async create(data: TCreateShopProduct) {
-        const [insertId] = await db<IShopProductData>('shop_products')
+        try {
+            const [insertId] = await db<IShopProductData>('shop_products')
             .insert(data);
-        return insertId
+            return insertId
+        }
+        catch(err) {
+            throw err
+        }
     }
 
     async update(id: number, data: TUpdateShopProduct) {
-        const affectedRows = db<IShopProductData>('shop_products')
+        try {
+
+            const affectedRows = db<IShopProductData>('shop_products')
             .where({ ID: id })
             .update(data);
-        return affectedRows
+            return affectedRows
+        }
+        catch(err) {
+            throw err
+        }
     }
 
     async delete(id: number) {

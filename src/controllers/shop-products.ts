@@ -6,6 +6,8 @@ export default class ShopProductsController {
     constructor(shopProductService: ShopProductService) {
         this.shopProductService = shopProductService
     }
+
+    // Get all the shops with their products
     getAllShopProducts = async (_: Request, res: Response) => {
         try {
             const result = await this.shopProductService.getAllShopProducts();
@@ -31,6 +33,7 @@ export default class ShopProductsController {
         }
     }
 
+    // Get shop with its products
     getShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);
@@ -42,7 +45,7 @@ export default class ShopProductsController {
             })
         }
         try {
-            const result = await this.shopProductService.getShopProduct(shopProductId);
+            const result = await this.shopProductService.getShopProducts(shopProductId);
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -65,6 +68,7 @@ export default class ShopProductsController {
         }
     }
 
+    // Create product for a shop
     setShopProduct = async (req: Request, res: Response) => {
         const {shop_id, product_id} = req.body;
         if(shop_id === undefined 
@@ -83,32 +87,34 @@ export default class ShopProductsController {
             product_id
         }
         try {
-            const result = await this.shopProductService.setShopProduct(allowedFields);
+            const createdProductId = await this.shopProductService.setShopProduct(allowedFields);
             return res.status(201).json({
                 success: true,
                 body: {
-                    ID: result,
+                    ID: createdProductId,
                     ...allowedFields
                 },
-                message: `shop-product ${result} created successfully`
+                message: `shop-product ${createdProductId} created successfully`
             })
         }
-        catch (err) {
-            if(err instanceof Error) {
-                return res.status(500).json({
+        catch (err: any) {
+            console.log(err);
+            if(err.code === "ER_DUP_ENTRY" && err.errno === 1062) {
+                return res.status(409).json({
                     success: false,
                     body: null,
-                    message: err.message
+                    message: "یک محصول با این نام در این فروشگاه وجود دارد"
                 })
             }
             return res.status(500).json({
                 success: false,
                 body: null,
-                message: "Unknown message"
+                message: err.message || "Internal server error"
             })
         }
     }
 
+    // Update product for a shop
     updateShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);
@@ -158,6 +164,7 @@ export default class ShopProductsController {
             }
         }
         catch(err) {
+            console.log(err);
             if (err instanceof Error) {
                 return res.status(500).json({
                     success: false,
@@ -173,6 +180,7 @@ export default class ShopProductsController {
         }
     }
 
+    // Delete product for a shop
     deleteShopProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const shopProductId = Number(id);

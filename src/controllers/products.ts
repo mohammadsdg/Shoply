@@ -7,6 +7,7 @@ export default class ProductController {
         this.productService = productService
     }
 
+    // Get all products name
     getAllProducts = async (_: Request, res: Response) => {
         try {
             const result = await this.productService.getAllProducts();
@@ -32,6 +33,7 @@ export default class ProductController {
         }
     }
 
+    // Get product by ID
     getProduct = async (req: Request, res: Response) => {
         const {id} = req.params;
         const productId = Number(id);
@@ -75,6 +77,7 @@ export default class ProductController {
         }
     }
 
+    // Create product
     setProduct = async (req: Request, res: Response) => {
         const {
             alloy_id,
@@ -110,22 +113,23 @@ export default class ProductController {
                 })
             }
         }
-        catch (err) {
-            if(err instanceof Error) {
-                return res.status(500).json({
+        catch (err: any) {
+            if(err.code === 'ER_NO_REFERENCED_ROW_2' && err.errno === 1452) {
+                return res.status(409).json({
                     success: false,
                     body: null,
-                    message: err.message
+                    message: "این ایتم به رکوردی اشاره میکند که وجود ندارد"
                 })
             }
             return res.status(500).json({
                 success: false,
                 body: null,
-                message: "Unknown error"
+                message: err.message || "Internal server error"
             })
         }
     }
 
+    // Update product by their alloy_id, section_id, brand_id, grouping_id, material_id
     updateProduct = async (req: Request, res: Response) => {
         const {
             alloy_id,
@@ -151,28 +155,30 @@ export default class ProductController {
             material_id
         }
         try {
-            const result = await this.productService.updateProduct(productId, productData)
-            return res.status(200).json({
-                success: false,
-                body: {
-                    ID: productId,
-                    ...productData
-                },
-                message: `product ${productId} updated successfully`
-            })
+            const updatedProductId = await this.productService.updateProduct(productId, productData);
+            if (updatedProductId) {
+                return res.status(200).json({
+                    success: false,
+                    body: {
+                        ID: productId,
+                        ...productData
+                    },
+                    message: `product ${productId} updated successfully`
+                })
+            }
         }
-        catch (err) {
-            if(err instanceof Error) {
-                return res.status(500).json({
+        catch (err: any) {
+            if(err.code === "ER_NO_REFERENCED_ROW_2" &&  err.errno === 1452) {
+                return res.status(409).json({
                     success: false,
                     body: null,
-                    message: err.message
+                    message: "این ایتم به مرجعی اشاره میکند که وجود ندارد"
                 })
             }
             return res.status(500).json({
                 success: false,
                 body: null,
-                message: "Unknown error"
+                message: err.message || "Internal server error"
             })
         }
     }
