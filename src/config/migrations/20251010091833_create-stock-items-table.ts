@@ -4,11 +4,14 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('stock_items', table=> {
         table.increments('ID').primary();
         table.integer('product_size_id').unsigned().notNullable();
-        table.string('single_product');
+        table.double('width').defaultTo('null')
+        table.string('single_product_code');
+        table.integer('parent_id').unsigned().defaultTo(10);
 
-        table.specificType('status', 'tinyint');
+        table.specificType('status', 'tinyint').defaultTo(10);
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+        table.timestamp('sold_at').defaultTo(knex.fn.now());
     })
 }
 

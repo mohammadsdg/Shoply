@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
 
     // @BRANDS_TABLE
     await knex.schema.alterTable('brands', table=> {
-        table.unique(['user_id']);
+
         table
             .foreign('user_id')
             .references('ID')
@@ -26,7 +26,6 @@ export async function up(knex: Knex): Promise<void> {
 
     // @SECTIONS_TABLE
     await knex.schema.alterTable('sections', table=> {
-        table.unique(['material_id']);
 
         table
             .foreign('material_id')
@@ -38,7 +37,6 @@ export async function up(knex: Knex): Promise<void> {
 
     // @DIMENSIONS_TABLE
     await knex.schema.alterTable('dimensions', table=> {
-        table.unique(['user_id']);
 
         table
             .foreign('user_id')
@@ -50,7 +48,6 @@ export async function up(knex: Knex): Promise<void> {
 
     // @GROUPING_TABLE
     await knex.schema.alterTable('groupings', table=> {
-        table.unique(['section_id', 'material_id']);
 
         table
             .foreign('section_id')
@@ -58,6 +55,17 @@ export async function up(knex: Knex): Promise<void> {
             .inTable('sections')
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
+
+        table
+            .foreign('material_id')
+            .references('ID')
+            .inTable('materials')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
+    })
+
+    // @ALLOY_TABLE
+    await knex.schema.alterTable('alloys', table=> {
 
         table
             .foreign('material_id')
@@ -75,7 +83,7 @@ export async function up(knex: Knex): Promise<void> {
             'alloy_id',
             'grouping_id',
              'brand_id'
-        ]);
+        ], 'uq_products_idx');
 
         table
             .foreign('section_id')
@@ -118,16 +126,16 @@ export async function up(knex: Knex): Promise<void> {
         table.unique([
             'shop_id',
             'product_id'
-        ]);
+        ], 'uq_shop_product_idx');
 
         table
-            .foreign('shop_id')
+            .foreign('shop_id', 'fk_shop_products_shop_id')
             .references('ID')
             .inTable('shops')
             .onDelete('CASCADE')
             .onUpdate('CASCADE');
         table
-            .foreign('product_id')
+            .foreign('product_id', 'fk_shop_products_product_id')
             .references('ID')
             .inTable('products')
             .onDelete('CASCADE')
@@ -136,10 +144,10 @@ export async function up(knex: Knex): Promise<void> {
 
     // @PRODUCTS_SIZE_TABLE
     await knex.schema.alterTable('products_size', table=> {
-        table.unique(['shop_products_id']);
+        table.unique(['shop_products_id'], 'uq_products_size_idx');
 
         table
-            .foreign('shop_products_id')
+            .foreign('shop_products_id', 'fk_shop_product_id')
             .references('ID')
             .inTable('shop_products')
             .onDelete('CASCADE')
@@ -148,12 +156,18 @@ export async function up(knex: Knex): Promise<void> {
 
     // @STOCK_ITEMS_TABLE
     await knex.schema.alterTable('stock_items', table=> {
-        table.unique(['product_size_id']);
-        
+
         table
-            .foreign('product_size_id')
+            .foreign('product_size_id', 'fk_product_size')
             .references('ID')
             .inTable('products_size')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE');
+        
+        table
+            .foreign('parent_id', 'fk_parent_id')
+            .references('ID')
+            .inTable('stock_items')
             .onDelete('CASCADE')
             .onUpdate('CASCADE');
     })

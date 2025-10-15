@@ -114,8 +114,15 @@ export default class ProductController {
             }
         }
         catch (err: any) {
-            if(err.code === 'ER_NO_REFERENCED_ROW_2' && err.errno === 1452) {
-                return res.status(409).json({
+            if(err.code === 'ER_DUP_ENTRY' && err.errno === 1062) {
+                return res.status(422).json({
+                    success: false,
+                    body: null,
+                    message: "یک ایتم با این مشخصات وجود دارد"
+                })
+            }
+            if(err.code === "ER_NO_REFERENCED_ROW_2" &&  err.errno === 1452) {
+                return res.status(404).json({
                     success: false,
                     body: null,
                     message: "این ایتم به رکوردی اشاره میکند که وجود ندارد"

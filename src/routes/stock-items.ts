@@ -8,6 +8,6 @@ const stockItemController = new StockItemsController(stockItemService);
 
 router.get("/stock-items", stockItemController.getAllItems);
 router.get("/stock-items/:id", stockItemController.getItem);
-router.post("/stock-items", stockItemController.setItem);
+router.post("/stock-items", stockItemController.sellItem);
 
 export default router;

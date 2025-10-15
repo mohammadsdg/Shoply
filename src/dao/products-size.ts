@@ -2,10 +2,11 @@ import { db } from "../config/db.js";
 import type { IProductSizeData, TCreateProductSize, TUpdateProductSize } from "../types/products-size.js";
 
 export default class  ProductSizeDao {
+
     async getAll(shop_id: number) {
         const query = db<IProductSizeData>({ ps: 'products_size' })
             .leftJoin({ sp: 'shop_products' }, 'sp.ID', 'ps.shop_products_id')
-            .leftJoin({ p: 'products' }, 'p.ID', 'ps.product_id')
+            .leftJoin({ p: 'products' }, 'p.ID', 'sp.product_id')
             .leftJoin({ s: 'sections' }, 's.ID', 'p.section_id')
             .select(
                 "ps.ID",
@@ -29,7 +30,6 @@ export default class  ProductSizeDao {
 
         const rows = await query;
         return rows;
-            
     }
 
     async getById(id: number) {
@@ -39,9 +39,14 @@ export default class  ProductSizeDao {
     }
 
     async create(data: TCreateProductSize) {
-        const [insertId] = await db<IProductSizeData>('products_size')
+        try {
+            const [insertId] = await db<IProductSizeData>('products_size')
             .insert(data);
-        return insertId;
+            return insertId;
+        }
+        catch(err) {
+            throw err;
+        }
     }
 
     async update(id: number, data: TUpdateProductSize) {

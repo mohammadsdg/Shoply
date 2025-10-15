@@ -123,7 +123,6 @@ export default class UsersController {
     setRole = async (req: Request, res: Response) => {
         let {username, password, role} = req.body;
         role = role || 'user';
-        console.log(username, password)
         if (username === undefined || username === null || 
             password === undefined || password === null) {
             return res.status(400).json({

@@ -1,11 +1,29 @@
 export interface IStockItemData {
-    ID: number,
+    ID?: number,
     product_size_id: number,
-    single_product: number,
+    width: number,
+    single_product_code: string,
+    parent_id?: number | null,
     status: number,
     created_at: number,
-    updated_at: number
+    updated_at: number,
+    sold_at?: Date
 }
 
-export type TCreateStockItem = Omit<IStockItemData, 'ID' | 'status' | 'created_at' | 'updated_at'>;
+export interface ISellStockItemInput {
+    ID: number,
+    product_size_id: number,
+    width: number,
+    sold_width: number,
+    parent_id: number,
+    single_product_code: string
+}
+
+export interface ISellStockRequestBody {
+    soldItems: ISellStockItemInput[];
+}
+
+export type TCreateStockItem = Omit<IStockItemData, 'status' | 'created_at' | 'updated_at'> & {
+    soldWidth?: number
+};
 export type TUpdateStockItem = Partial<TCreateStockItem>

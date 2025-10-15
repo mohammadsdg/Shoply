@@ -29,9 +29,14 @@ export default class ProductDao {
     }
 
     async create(data: TCreateProduct) {
-        const [insertId] = await db<IProductData>('products')
+        try {
+            const [insertId] = await db<IProductData>('products')
             .insert(data);
-        return insertId;
+            return insertId;
+        }
+        catch(err) {
+            throw err
+        }
     }
 
     async update(id: number, data: TUpdateProduct) {

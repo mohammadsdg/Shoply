@@ -98,7 +98,6 @@ export default class ShopProductsController {
             })
         }
         catch (err: any) {
-            console.log(err);
             if(err.code === "ER_DUP_ENTRY" && err.errno === 1062) {
                 return res.status(409).json({
                     success: false,
@@ -164,7 +163,6 @@ export default class ShopProductsController {
             }
         }
         catch(err) {
-            console.log(err);
             if (err instanceof Error) {
                 return res.status(500).json({
                     success: false,

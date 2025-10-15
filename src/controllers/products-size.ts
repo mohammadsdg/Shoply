@@ -5,6 +5,7 @@ import type ProductSizeService from "../services/products-size.js";
 import StockItemService from "../services/stock-items.js";
 
 export default class ProductsSizeController {
+
     // define ProductSizeService and StockItemService instances
     private productsSizeService: ProductSizeService;
     private stockItemService: StockItemService;
@@ -17,14 +18,12 @@ export default class ProductsSizeController {
         this.stockItemService = stockItemService
     }
 
-    // Get all sizes of a product
+    // Get all sizes of a product (shop_id is conditional)
     getAllProducts = async (req: Request, res: Response) => {
         const {shop_id} = req.query;
         const shopId = Number(shop_id);
-        console.log(shopId)
         try {
             const result = await this.productsSizeService.getAllProducts(shopId);
-            console.log(result)
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -82,8 +81,10 @@ export default class ProductsSizeController {
         }
     }
 
+    // Create products_size and stock_items together
     setProduct = async (req: Request, res: Response) => {
-        const {
+        // Destructuring datas from Request.params
+        let {
             shop_products_id, 
             param_one, 
             param_two, 
@@ -94,7 +95,10 @@ export default class ProductsSizeController {
             section_id,
             price
         } = req.body;
+        number = Number(number);
+        width = Number(width);
 
+        // define product_size input
         const productSizeData: TCreateProductSize = {
             shop_products_id,
             param_one,
@@ -105,25 +109,30 @@ export default class ProductsSizeController {
             weight,
             price
         }
-
-        if (param_two===undefined) {
-            productSizeData.param_two = null
-        }
-
-        if (param_three===undefined) {
-            productSizeData.param_three = null
-        }
-
-        if (Object.values(productSizeData).every(val=> val===undefined || val===null)) {
+        // Getting all the necessary inputs
+        const { param_two: two, param_three: three, ...required } = productSizeData;
+        // Check if required input are not null or undefined
+        if (Object.values(required).some(
+            value=> value===undefined || value===null) ||
+            section_id===undefined || section_id===null) {
             return res.status(400).json({
-                success: true,
+                success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
+        // Check params
+        if (!param_two) {
+            productSizeData.param_two = null
+        }
+        if (!param_three) {
+            productSizeData.param_three = null
+        }
 
         let density = 0;
         let volume = 0;
+        section_id = Number(section_id);
+        // Calculating density based on section_id
         switch(section_id) {
             case 1:
                 if (width && weight) {
@@ -156,10 +165,11 @@ export default class ProductsSizeController {
                 }
                 break;
         }
+        // setting density
         productSizeData.density = density;
-        try{
-            const productSizeId = await this.productsSizeService.setProductSize(productSizeData)
-            
+        try {
+            const productSizeId = await this.productsSizeService.setProductSize(productSizeData);
+            // if productSize not created return error
             if (!productSizeId) {
                 return res.status(500).json({
                     success: false,
@@ -167,20 +177,25 @@ export default class ProductsSizeController {
                     message: "Failed to create product size"
                 });
             }
-
+            // Get millisecond for part of the single_product_code
+            const timeInMilliSecond = new Date().getTime();
+            // define stock_items input
             const stockItemData = {
                 product_size_id: productSizeId,
-                single_product: 1
+                single_product_code: `${productSizeId}-${width}-${timeInMilliSecond}`,
+                width
             }
-            const stockItemId = await this.stockItemService.setStockItem(
-                stockItemData
+
+            const stockItemArray = await this.stockItemService.setMultiStockItem(
+                stockItemData,
+                number
             );
             // 3️⃣ Return combined response
             return res.status(201).json({
                 success: true,
                 body: {
                     product_size: { ID: productSizeId, ...productSizeData },
-                    stock_item: { ID: stockItemId, ...stockItemData }
+                    stock_item: stockItemArray
                 },
                 message: "Product size and stock created successfully"
             });
