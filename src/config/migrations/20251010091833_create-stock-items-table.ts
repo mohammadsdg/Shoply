@@ -4,9 +4,9 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('stock_items', table=> {
         table.increments('ID').primary();
         table.integer('product_size_id').unsigned().notNullable();
-        table.double('width').defaultTo('null')
+        table.double('width').unsigned().notNullable();
         table.string('single_product_code');
-        table.integer('parent_id').unsigned().defaultTo(10);
+        table.integer('parent_id').unsigned().nullable();
 
         table.specificType('status', 'tinyint').defaultTo(10);
         table.timestamp('created_at').defaultTo(knex.fn.now());

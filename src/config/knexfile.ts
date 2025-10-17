@@ -7,11 +7,11 @@ const config: { [key: string]: Knex.Config} = {
   development: {
     client: 'mysql2',
     connection: {
-      host: DB_HOST || 'localhost',
+      host: DB_HOST || '156.255.1.98',
       port: Number(DB_PORT) || 3306,
-      database: DB_NAME || 'knex',
-      user:     DB_USER || 'root',
-      password: DB_PASSWORD || '1234'
+      database: DB_NAME || 'shoply_db',
+      user:     DB_USER || 'alireza',
+      password: DB_PASSWORD || 'Alirezza2547'
     },
     pool: {
       min: 2,
@@ -25,11 +25,11 @@ const config: { [key: string]: Knex.Config} = {
   production: {
     client: 'mysql2',
     connection: {
-      host:     DB_HOST || 'localhost',
+      host:     DB_HOST || '156.255.1.98',
       port:     Number(DB_PORT) || 3306,
-      database: DB_NAME || 'knex',
-      user:     DB_USER || 'shoply_user',
-      password: DB_PASSWORD || '1234'
+      database: DB_NAME || 'shoply_db',
+      user:     DB_USER || 'alireza',
+      password: DB_PASSWORD || 'Alirezza2547'
     },
     pool: {
       min: 2,

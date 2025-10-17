@@ -8,6 +8,7 @@ export default class StockItemsController {
         this.stockItemService = stockItemService
     }
 
+    // Get all the items in stock_items
     getAllItems = async (_: Request, res: Response) => {
         try {
             const result = this.stockItemService.getAllStockItems()
@@ -34,40 +35,40 @@ export default class StockItemsController {
         }
     }
 
-    getItem = async (req: Request, res: Response) => {
-        const {id} = req.params;
-        const stockItemId = Number(id);
-        if(isNaN(stockItemId)) {
-            return res.status(400).json({
-                success: false,
-                body: null,
-                message: "Invalid ID"
-            })
-        }
-        try {
-            const result = await this.stockItemService.getStockItem(stockItemId)
-            return res.status(200).json({
-                success: true,
-                body: result,
-                message: `stock_item ${id} fetched successfully`
-            })
-        }
+    // getItem = async (req: Request, res: Response) => {
+    //     const {id} = req.params;
+    //     const stockItemId = Number(id);
+    //     if(isNaN(stockItemId)) {
+    //         return res.status(400).json({
+    //             success: false,
+    //             body: null,
+    //             message: "Invalid ID"
+    //         })
+    //     }
+    //     try {
+    //         const result = await this.stockItemService.getStockItems(stockItemId)
+    //         return res.status(200).json({
+    //             success: true,
+    //             body: result,
+    //             message: `stock_item ${id} fetched successfully`
+    //         })
+    //     }
 
-        catch(err) {
-            if(err instanceof Error) {
-                res.status(500).json({
-                    success: false,
-                    body: null,
-                    message: err.message
-                })
-            }
-            res.status(500).json({
-                success: false,
-                body: null,
-                message: "Unknown message"
-            })
-        }
-    }
+    //     catch(err) {
+    //         if(err instanceof Error) {
+    //             res.status(500).json({
+    //                 success: false,
+    //                 body: null,
+    //                 message: err.message
+    //             })
+    //         }
+    //         res.status(500).json({
+    //             success: false,
+    //             body: null,
+    //             message: "Unknown message"
+    //         })
+    //     }
+    // }
 
     sellItem = async (req: Request, res: Response) => {
         // Destructuring datas from Request.params
@@ -97,19 +98,57 @@ export default class StockItemsController {
             })
         }
 
-        const newItems = soldItems.map(item=> {
-            const { product_size_id, width, ID, sold_width } = item;
-            const finalWidth = width - (sold_width ?? 0);
-            const timeInMilliSecond = new Date().getTime();
-            return {
-                ID,
-                product_size_id,
-                width: finalWidth,
-                parent_id: (item.ID ?? null),
-                single_product_code: `${item.ID}-${finalWidth}-${timeInMilliSecond}`
-            }
-        })
         try {
+            // Get the marked items for sale
+            const markedItems = await this.stockItemService.getStockItems(soldItems);
+            console.log(markedItems);
+
+            for (const soldItem of soldItems) {
+                const dbItem = markedItems.find(i=> i.ID === soldItem.ID);
+                // No item found
+                if (!dbItem) {
+                    return res.status(404).json({
+                        success: false,
+                        body: null,
+                        message: `item with ID ${soldItem.ID} not found`
+                    })
+                }
+                // Item found but status = 0
+                if (dbItem.status===0) {
+                    return res.status(409).json({
+                        success: false,
+                        body: null,
+                        message: `item with ID ${soldItem.ID} not found`
+                    })
+                }
+                // Width is not the same
+                if (dbItem.width !== soldItem.width
+                ) {
+                    return res.status(400).json({
+                        success: false,
+                        body: null,
+                        message: "Conflict, width does not match"
+                    })
+                }
+            }
+
+            const newItems = soldItems.map(item=> {
+                const { product_size_id, ID, sold_width, width } = item;
+                const finalWidth = width - (sold_width ?? 0);
+                
+                if (finalWidth < 0) {
+                    throw new Error(`Conflict, cannot sell ${sold_width} units; only ${width} available`)
+                }
+
+                const timeInMilliSecond = new Date().getTime();
+                return {
+                    ID,
+                    product_size_id,
+                    width: finalWidth,
+                    parent_id: (item.ID ?? null),
+                    single_product_code: `${item.ID}-${finalWidth}-${timeInMilliSecond}`
+                }
+            })
             const stockItemData = await this.stockItemService.sellStockItem(newItems);
             if(stockItemData) {
                 return res.status(201).json({

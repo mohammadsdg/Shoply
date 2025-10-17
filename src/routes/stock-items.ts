@@ -7,7 +7,7 @@ const stockItemService = new StockItemService();
 const stockItemController = new StockItemsController(stockItemService);
 
 router.get("/stock-items", stockItemController.getAllItems);
-router.get("/stock-items/:id", stockItemController.getItem);
+// router.get("/stock-items/mark-sold", stockItemController.);
 router.post("/stock-items", stockItemController.sellItem);
 
 export default router;

@@ -7,10 +7,18 @@ export default class StockItemDao {
             .select('*');
     }
 
-    async getById(id: number) {
-        return db<IStockItemData>('stock_items')
-            .where({ ID: id })
-            .first()
+    async getByIds(itemIds: { ID: number }[]): Promise<IStockItemData[]> {
+        const ids = itemIds.map(item=> item.ID);
+        console.log(ids);
+        const result = await db<IStockItemData>('stock_items')
+            .whereIn('ID', ids)
+            .andWhere({ status: 10 });
+        console.log(result);
+        if (result.length === 0) {
+            throw new Error("No stock item found")
+        }
+
+        return result;
     }
 
     async createMulti(data: TCreateStockItem, number: number) {

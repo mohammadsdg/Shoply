@@ -7,8 +7,8 @@ export default class StockItemService {
         return this.stockItemDao.getAll();
     }
 
-    async getStockItem(id: number) {
-        return this.stockItemDao.getById(id);
+    async getStockItems(ids: { ID: number }[]) {
+        return this.stockItemDao.getByIds(ids);
     }
 
     async setMultiStockItem(data: TCreateStockItem, number: number) {
