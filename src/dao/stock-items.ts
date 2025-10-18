@@ -3,8 +3,9 @@ import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../type
 
 export default class StockItemDao {
     async getAll() {
-        return db<IStockItemData>('stock_items')
+        const result = await db<IStockItemData>('stock_items')
             .select('*');
+        return result;
     }
 
     async getByIds(itemIds: { ID: number }[]): Promise<IStockItemData[]> {
@@ -28,6 +29,7 @@ export default class StockItemDao {
                 .insert(data);
             let insertId = Number(rawInsertId);
             createdData.push({
+                ID: insertId,
                 ...data
             })
         }

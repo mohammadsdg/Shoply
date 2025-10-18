@@ -11,7 +11,8 @@ export default class StockItemsController {
     // Get all the items in stock_items
     getAllItems = async (_: Request, res: Response) => {
         try {
-            const result = this.stockItemService.getAllStockItems()
+            const result = await this.stockItemService.getAllStockItems()
+            console.log(result);
             return res.status(200).json({
                 success: true,
                 body: result,
@@ -83,7 +84,6 @@ export default class StockItemsController {
             })
         }
 
-        console.log(soldItems);
         // Check if required inputs exists and are not null
         const invalidItem = soldItems.find(item=> 
             [item.sold_width, item.width, item.product_size_id, item.ID].some(
@@ -101,7 +101,6 @@ export default class StockItemsController {
         try {
             // Get the marked items for sale
             const markedItems = await this.stockItemService.getStockItems(soldItems);
-            console.log(markedItems);
 
             for (const soldItem of soldItems) {
                 const dbItem = markedItems.find(i=> i.ID === soldItem.ID);
