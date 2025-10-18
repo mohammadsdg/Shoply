@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments('ID').primary();
         table.integer('product_size_id').unsigned().notNullable();
         table.double('width').unsigned().notNullable();
-        table.string('single_product_code');
+        table.text('single_product_code');
         table.integer('parent_id').unsigned().nullable();
 
         table.specificType('status', 'tinyint').defaultTo(10);
