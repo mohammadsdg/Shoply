@@ -177,12 +177,11 @@ export default class ProductsSizeController {
                     message: "Failed to create product size"
                 });
             }
-            // Get millisecond for part of the single_product_code
-            const timeInMilliSecond = new Date().getTime();
+
             // define stock_items input
             const stockItemData = {
                 product_size_id: productSizeId,
-                single_product_code: `${productSizeId}-${width}-${timeInMilliSecond}`,
+                single_product_code: null,
                 width
             }
 
@@ -200,7 +199,17 @@ export default class ProductsSizeController {
                 message: "Product size and stock created successfully"
             });
         }
-        catch(err) {
+        catch(err: any) {
+            console.log(err);
+
+            if (err.code === 'ER_NO_REFERENCED_ROW_2' && err.errno === 1452) {
+                return res.status(500).json({
+                    status: false,
+                    body: null,
+                    message: 'No shop_product found'
+                })
+            }
+            
             if (err instanceof Error) {
                 return res.status(500).json({
                     status: false,

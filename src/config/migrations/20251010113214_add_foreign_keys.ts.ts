@@ -162,9 +162,6 @@ export async function up(knex: Knex): Promise<void> {
 
     // @PRODUCTS_SIZE_TABLE
     await knex.schema.alterTable('products_size', table=> {
-        table.unique(['shop_products_id'], {
-            indexName: 'uq_products_size_shop_product_id'
-        });
 
         table
             .foreign('shop_products_id', 'fk_products_size_shop_product_id')
@@ -208,7 +205,6 @@ export async function down(knex: Knex): Promise<void> {
     // @DROP PRODUCTS_SIZE
     await knex.schema.alterTable('products_size', table=> {
         table.dropForeign(['shop_products_id'], 'fk_products_size_shop_product_id');
-        table.dropUnique(['shop_products_id'], 'uq_products_size_shop_product_id')
     })
 
     // @DROP SHOP_PRODUCTS

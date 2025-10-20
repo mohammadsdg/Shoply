@@ -2,8 +2,8 @@ export interface IStockItemData {
     ID?: number,
     product_size_id: number,
     width: number,
-    single_product_code: string,
-    parent_id?: number | null,
+    single_product_code: string | null | undefined,
+    parent_id?: number | null | undefined,
     status: number,
     created_at: number,
     updated_at: number,
@@ -16,7 +16,7 @@ export interface ISellStockItemInput {
     width: number,
     sold_width: number,
     parent_id: number,
-    single_product_code: string
+    single_product_code: string | null
 }
 
 export interface ISellStockRequestBody {

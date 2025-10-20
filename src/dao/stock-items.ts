@@ -10,11 +10,9 @@ export default class StockItemDao {
 
     async getByIds(itemIds: { ID: number }[]): Promise<IStockItemData[]> {
         const ids = itemIds.map(item=> item.ID);
-        console.log(ids);
         const result = await db<IStockItemData>('stock_items')
             .whereIn('ID', ids)
             .andWhere({ status: 10 });
-        console.log(result);
         if (result.length === 0) {
             throw new Error("No stock item found")
         }
@@ -54,7 +52,6 @@ export default class StockItemDao {
 
                 // 2. Insert new items
                 for (let item of items) {
-                    console.log(item);
                     // seperating ID because we dont want it in insert
                     const {ID, ...newItem} = item;
                     // Create new product
