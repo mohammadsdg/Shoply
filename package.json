@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "migrate:make": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
+    "migrate:structure": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
+    "migrate:alter": "knex migrate:make --migrations-directory ./src/config/migrations/alter -x ts",
     "migrate": "npx knex migrate:latest --knexfile ./src/config/knexfile.ts",
     "migrate:rollback": "npx knex migrate:rollback --knexfile ./src/config/knexfile.ts",
     "build": "tsc",
