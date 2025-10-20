@@ -2,13 +2,13 @@ import type { Knex } from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-    return knex.schema.createTable('pre-invoce', table => {
+    return knex.schema.createTable('pre_invoice', table => {
         table.increments('ID').primary();
         table.integer('stock_item_id').unsigned().notNullable();
         table.double('weight').unsigned().notNullable();
         table.bigint('price').unsigned().notNullable();
         table.string('customer_name').nullable();
-        table.enum('role', ['pending', 'approved', 'cancelled'], {
+        table.enum('status', ['pending', 'approved', 'cancelled'], {
             useNative: true,
             enumName: 'deal_enum'
         }).defaultTo('pending')
@@ -19,6 +19,6 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.dropTableIfExists('pre-invoice')
+    await knex.schema.dropTableIfExists('pre_invoice')
 }
 
