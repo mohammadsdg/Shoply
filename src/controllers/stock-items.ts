@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import type StockItemService from "../services/stock-items.js";
 import type { ISellStockItemInput, ISellStockRequestBody, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
 

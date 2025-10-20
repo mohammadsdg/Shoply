@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import type ShopService from "../services/shops.js";
 
 export default class ShopsController {

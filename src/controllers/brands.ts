@@ -1,4 +1,5 @@
 import type {Request, Response} from "express";
+
 import BrandService from "../services/brands.js";
 
 export default class BrandController {

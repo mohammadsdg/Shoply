@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import AlloyService from "../services/alloys.js";
 
 export default class AlloysController {

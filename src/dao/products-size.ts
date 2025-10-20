@@ -25,7 +25,7 @@ export default class  ProductSizeDao {
             )
         // Optional WHERE condition
         if (shop_id) {
-        query.where("sp.shop_id", shop_id);
+            query.where("sp.shop_id", shop_id);
         }
 
         const rows = await query;

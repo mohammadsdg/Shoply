@@ -1,4 +1,5 @@
 import type { Response, Request } from "express";
+
 import SectionService from "../services/sections.js";
 import type { TCreateSection, TUpdateSection } from "../types/sections.js";
 

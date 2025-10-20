@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+
 import type UserService from "../services/users.js";
 import type { IUserInput } from "../types/users.js";
-import bcrypt from "bcryptjs";
 
 export default class UsersController {
     private userService: UserService;

@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import ProductService from "../services/products.js";
 
 export default class ProductController {

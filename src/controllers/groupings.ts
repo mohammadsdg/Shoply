@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
+
 import type GroupingService from "../services/groupings.js";
+
 export default class GroupingsController {
     private groupingService: GroupingService;
     constructor(groupingService: GroupingService) {

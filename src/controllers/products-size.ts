@@ -1,4 +1,5 @@
-import type {Request, Response} from "express"
+import type {Request, Response} from "express";
+
 import { hexagonPrismVolume, pipeVolume, roundVolume, sheetVolume } from "../utils/generate-volume.js";
 import type { TCreateProductSize } from "../types/products-size.js";
 import type ProductSizeService from "../services/products-size.js";
