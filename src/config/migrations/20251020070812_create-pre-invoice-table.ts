@@ -2,7 +2,7 @@ import type { Knex } from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-    return knex.schema.createTable('pre_invoice', table => {
+    return knex.schema.createTable('pre_invoices', table => {
         table.increments('ID').primary();
         table.integer('stock_item_id').unsigned().notNullable();
         table.double('weight').unsigned().notNullable();

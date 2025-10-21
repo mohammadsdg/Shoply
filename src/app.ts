@@ -15,7 +15,7 @@ import productsRoute from "./routes/products.js";
 import shopProductsRoute from "./routes/shop-products.js";
 import productsSizeRoute from "./routes/products-size.js";
 import stockItemsRoute from "./routes/stock-items.js";
-import preInvoice from "./routes/pre-invoice.js";
+import preInvoice from "./routes/pre-invoices.js";
 
 import 'colors';
 const PORT: number = parseInt(process.env.SERVER_PORT || "8000");

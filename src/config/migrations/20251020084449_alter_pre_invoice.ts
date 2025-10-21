@@ -2,7 +2,7 @@ import type { Knex } from "knex";
 
 
 export async function up(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('pre_invoice', table => {
+    await knex.schema.alterTable('pre_invoices', table => {
         table
             .foreign('stock_item_id')
             .references('ID')
@@ -13,9 +13,8 @@ export async function up(knex: Knex): Promise<void> {
     })
 }
 
-
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('pre_invoice', table=> {
+    await knex.schema.alterTable('pre_invoices', table=> {
         table.dropForeign(['stock_item_id'], 'fk_pre_invoice_stock_item_id')
     })
 }

@@ -9,7 +9,11 @@ export interface IPreInvoiceData {
     updated_at: Date
 }
 
-export type TPreInvoiceInput = Omit<
+export type TCreatePreInvoiceInput = Omit<
     IPreInvoiceData, 
-    'ID' | 'customer_name' | 'status' | 'created_at' | 'updated_at'
+    'ID' | 'status' | 'created_at' | 'updated_at'
 >
+
+export interface IPreInvoiceConditions {
+    status: 'pending' | 'approved'
+}
