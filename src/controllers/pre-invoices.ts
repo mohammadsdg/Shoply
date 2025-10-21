@@ -61,15 +61,19 @@ export default class PreInvoiceController {
         } = req.body as TCreatePreInvoiceInput;
 
         const pendingData = {
+            stock_item_id,
             weight,
             price,
-            stock_item_id,
             customer_name
         }
 
         const {customer_name: cName, ...required} = pendingData;
 
-        if (Object.values(required).some(value=> value===null || value===undefined)) {
+        if (Object.values(required).some(
+            value=> value===null || 
+            value===undefined || 
+            typeof value !== 'number')
+        ) {
             return res.status(400).json({
                 success: false,
                 body: null,
@@ -82,11 +86,23 @@ export default class PreInvoiceController {
             return res.status(201).json({
                 success: false,
                 body: pendingItems,
-                message: 'item in pre-invoice pending successfully'
+                message: 'item is successfully pending to be approved'
             })
             
         }
         catch(err) {
+            console.log(err);
+            // handle Mysql-specifig errors safely
+            if (typeof err === 'object' && err !== null) {
+                const anyErr = err as any
+                if(anyErr.code === 'ER_NO_REFERENCED_ROW_2' && anyErr.errno === 1452) {
+                    return res.status(400).json({
+                        status: false,
+                        body: null,
+                        message: 'Foreign key constraint failed',
+                    });
+                }
+            }
             if (err instanceof Error) {
                 return res.status(500).json({
                     status: false,

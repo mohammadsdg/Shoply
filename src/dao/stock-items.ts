@@ -2,9 +2,28 @@ import { db } from "../config/db.js";
 import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
 
 export default class StockItemDao {
+    
+    // Get all the stock_items and the datas for creating pre-invoice
     async getAll() {
-        const result = await db<IStockItemData>('stock_items')
-            .select('*');
+        const result = await db<IStockItemData>({ si: 'stock_items' })
+            .leftJoin({ ps: 'products_size' }, 'ps.ID', 'si.product_size_id' )
+            .leftJoin({ shp: 'shop_products' }, 'shp.ID', 'ps.shop_products_id')
+            .leftJoin({ p: 'products' }, 'p.ID', 'shp.product_id')
+            .leftJoin({ s: 'sections' }, 's.ID', 'p.section_id')
+            .select(
+                'si.ID',
+                'si.product_size_id',
+                'si.width',
+                'si.single_product_code',
+                'si.parent_id',
+                'si.status',
+                'ps.param_one',
+                'ps.param_two',
+                'ps.param_three',
+                'ps.density',
+                'ps.price',
+                's.name'
+            )
         return result;
     }
 
@@ -20,6 +39,7 @@ export default class StockItemDao {
         return result;
     }
 
+    // Initialize first items without single_product_code or parent_id
     async createMulti(data: TCreateStockItem, number: number) {
         let createdData: TCreateStockItem[] = [];
         for(let i = 0; i<number; i++) {

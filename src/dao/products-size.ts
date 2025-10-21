@@ -20,7 +20,7 @@ export default class  ProductSizeDao {
                 "ps.width",
                 "ps.status",
                 "p.section_id",
-                "s.name",
+                "s.name as section_name",
                 "sp.shop_id"
             )
         // Optional WHERE condition
