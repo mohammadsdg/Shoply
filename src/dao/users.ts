@@ -12,7 +12,7 @@ export default class UserDao {
     // Get user by username
     async getUser(data: IUserInput) {
         return db<IUserData>('users')
-            .where({ username: data.username })
+            .where(data)
             .first()
     }
 

@@ -9,7 +9,7 @@ const config: { [key: string]: Knex.Config} = {
     connection: {
       host: DB_HOST || 'localhost',
       port: Number(DB_PORT) || 3306,
-      database: DB_NAME || 'knex',
+      database: DB_NAME || 'test',
       user:     DB_USER || 'root',
       password: DB_PASSWORD || '1234'
     },
@@ -18,6 +18,7 @@ const config: { [key: string]: Knex.Config} = {
       max: 10
     },
     migrations: {
+      directory: 'src/config/migrations',
       tableName: 'knex_migrations',
     }
   },
@@ -36,6 +37,7 @@ const config: { [key: string]: Knex.Config} = {
       max: 10
     },
     migrations: {
+      directory: 'src/config/migrations',
       tableName: 'knex_migrations',
     }
   },

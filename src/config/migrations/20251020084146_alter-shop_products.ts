@@ -1,15 +1,8 @@
 import type { Knex } from "knex";
 
-
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.alterTable('shop_products', table=> {
-        table.unique([
-            'shop_id',
-            'product_id'
-        ], {
-            indexName: 'uq_shop_product_two'
-        });
-
+        
         table
             .foreign('shop_id', 'fk_shop_products_shop_id')
             .references('ID')
@@ -22,6 +15,13 @@ export async function up(knex: Knex): Promise<void> {
             .inTable('products')
             .onDelete('CASCADE')
             .onUpdate('CASCADE');
+
+        table.unique([
+            'shop_id',
+            'product_id'
+        ], {
+            indexName: 'uq_shop_product_two'
+        });
     })
 }
 

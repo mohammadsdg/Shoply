@@ -46,10 +46,9 @@ export default class UsersController {
         try{
             const result = await this.userService.getUser(userData);
             if(result?.username && (await bcrypt.compare(password, result.password))) {
-                const {password, ...userWithoutPassword} = result;
                 return res.status(200).json({
-                    success: false,
-                    body: userWithoutPassword,
+                    success: true,
+                    body: result,
                     message: `user ${result.ID} fetched successfully`
                 })
             }
