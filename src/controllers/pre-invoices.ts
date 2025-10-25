@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
 import PreInvoiceService from "../services/pre-invoices.js";
-import type { IPreInvoiceConditions, IPreInvoiceRequestBody } from "../types/pre-invoices.js";
+import type { IPreInvoiceConditions, IPreInvoiceRequestBody, TCreatePreInvoiceInput } from "../types/pre-invoices.js";
 
 export default class PreInvoiceController {
     // Create a private PreInvoiceService instance
@@ -54,43 +54,38 @@ export default class PreInvoiceController {
     setPreInvoice = async(req: Request, res: Response) => {
         // Destructuring datas from Request.body
         const {
-            marked_items
-        } = req.body as IPreInvoiceRequestBody
-        // Request must be an array
-        if (!Array.isArray(marked_items)) {
+            customer_name,
+            number,
+            price,
+            stock_item_id,
+            weight
+        } = req.body as TCreatePreInvoiceInput
+        // Check if request is valid
+        if (
+            !customer_name ||
+            !number ||
+            !price ||
+            !stock_item_id ||
+            !weight
+        ) {
             return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
-        // Check if request is valid
-        const invalidItem = marked_items.find(item=> {
-            const check = [
-                item.stock_item_id,
-                item.customer_name,
-                item.price,
-                item.weight,
-                item.number
-            ].some(value=> value === undefined || value === null)
-            if (check) {
-                return true
-            }
-            
-        })
-        // Return if request is not valid
-        if (invalidItem) {
-            return res.status(400).json({
-                suceess: false,
-                body: null,
-                message: "Invalid request"
-            })
-        }
 
+        const preInvoicePendingInput = {
+            customer_name,
+            number,
+            price,
+            stock_item_id,
+            weight
+        }
         // Sending request to mysql and return a response
         try {
 
-            const pendingItems = await this.preInVoiceService.setPending(marked_items);
+            const pendingItems = await this.preInVoiceService.setPending(preInvoicePendingInput);
             return res.status(201).json({
                 success: false,
                 body: pendingItems,

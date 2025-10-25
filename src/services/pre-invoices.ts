@@ -8,7 +8,7 @@ export default class PreInvoiceService {
         return this.preInvoiceDao.getAll(conditions);
     }
 
-    setPending = async (markedItems: TCreatePreInvoiceInput[]) => {
+    setPending = async (markedItems: TCreatePreInvoiceInput) => {
         return this.preInvoiceDao.createPending(markedItems);
     }
 }

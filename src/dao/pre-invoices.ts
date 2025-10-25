@@ -16,7 +16,7 @@ export default class PreInvoiceDao {
         }
     }
     // Create pending items
-    async createPending(markedItems: TCreatePreInvoiceInput[]) {
+    async createPending(markedItems: TCreatePreInvoiceInput) {
         try {
             const [insertId] = await db<IPreInvoiceData>('pre_invoices')
                 .insert(markedItems);
