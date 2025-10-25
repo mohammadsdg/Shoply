@@ -10,12 +10,12 @@ export default class StockItemService {
     async getStockItems(ids: { ID: number }[]) {
         return this.stockItemDao.getByIds(ids);
     }
-
+    // initialize new items 
     async setMultiStockItem(data: TCreateStockItem, number: number) {
         return this.stockItemDao.createMulti(data, number);
     }
 
-    async sellStockItem(items: TUpdateStockItem[]) {
+    async setStockItem(items: TUpdateStockItem[]) {
         return this.stockItemDao.upsert(items);
     }
 

@@ -1,3 +1,5 @@
+import type { ISellStockItemInput } from "./stock-items.js"
+
 export interface IPreInvoiceData {
     ID: number,
     stock_item_id: number,
@@ -15,8 +17,18 @@ export type TCreatePreInvoiceInput = Omit<
     'ID' | 'status' | 'created_at' | 'updated_at'
 >
 
-export interface IPreInvoiceRequestBody {
-    marked_items: TCreatePreInvoiceInput[]
+export type TUpdatePreInvoiceInput = Omit<
+    IPreInvoiceData,
+    'created_at' | 'updated_at'
+>
+
+export interface IPreInvoiceRequestBody<T> {
+    marked_items: T[]
+}
+
+export interface IPreInvoiceApprovedRequest {
+    pending_items: TUpdatePreInvoiceInput[],
+    sold_items: ISellStockItemInput[]
 }
 
 export interface IPreInvoiceConditions {

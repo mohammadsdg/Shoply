@@ -35,7 +35,9 @@ export default class StockItemsController {
             })
         }
     }
-    sellItem = async (req: Request, res: Response) => {
+
+    // Set new items with parent_id
+    setItem = async (req: Request, res: Response) => {
         // Destructuring datas from Request.params
         let { soldItems }
         = req.body as ISellStockRequestBody;
@@ -144,7 +146,7 @@ export default class StockItemsController {
                     single_product_code: code
                 }
             })
-            const stockItemData = await this.stockItemService.sellStockItem(newItems);
+            const stockItemData = await this.stockItemService.setStockItem(newItems);
             if(stockItemData) {
                 return res.status(201).json({
                     success: true,
