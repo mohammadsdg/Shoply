@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
             table.integer('product_size_id').unsigned().notNullable();
             table.double('width').unsigned().notNullable();
             table.text('single_product_code');
-            table.integer('parent_id').unsigned().notNullable();
+            table.integer('parent_id').unsigned();
     
             table.specificType('status', 'tinyint').defaultTo(10);
             table.timestamp('created_at').defaultTo(knex.fn.now());

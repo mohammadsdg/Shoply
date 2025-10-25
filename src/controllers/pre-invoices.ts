@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
 import PreInvoiceService from "../services/pre-invoices.js";
-import type { IPreInvoiceConditions, TCreatePreInvoiceInput } from "../types/pre-invoices.js";
+import type { IPreInvoiceConditions, IPreInvoiceRequestBody } from "../types/pre-invoices.js";
 
 export default class PreInvoiceController {
     // Create a private PreInvoiceService instance
@@ -52,37 +52,45 @@ export default class PreInvoiceController {
     }
 
     setPreInvoice = async(req: Request, res: Response) => {
-        // Destructure Request Body
+        // Destructuring datas from Request.body
         const {
-            weight,
-            price,
-            stock_item_id,
-            customer_name
-        } = req.body as TCreatePreInvoiceInput;
-
-        const pendingData = {
-            stock_item_id,
-            weight,
-            price,
-            customer_name
-        }
-
-        const {customer_name: cName, ...required} = pendingData;
-
-        if (Object.values(required).some(
-            value=> value===null || 
-            value===undefined || 
-            typeof value !== 'number')
-        ) {
+            marked_items
+        } = req.body as IPreInvoiceRequestBody
+        // Request must be an array
+        if (!Array.isArray(marked_items)) {
             return res.status(400).json({
                 success: false,
                 body: null,
                 message: "Invalid request"
             })
         }
+        // Check if request is valid
+        const invalidItem = marked_items.find(item=> {
+            const check = [
+                item.stock_item_id,
+                item.customer_name,
+                item.price,
+                item.weight,
+                item.number
+            ].some(value=> value === undefined || value === null)
+            if (check) {
+                return true
+            }
+            
+        })
+        // Return if request is not valid
+        if (invalidItem) {
+            return res.status(400).json({
+                suceess: false,
+                body: null,
+                message: "Invalid request"
+            })
+        }
 
+        // Sending request to mysql and return a response
         try {
-            const pendingItems = await this.preInVoiceService.setPending(pendingData);
+
+            const pendingItems = await this.preInVoiceService.setPending(marked_items);
             return res.status(201).json({
                 success: false,
                 body: pendingItems,

@@ -15,3 +15,7 @@ export interface IIndexRow {
     Index_comment: string,
     Ignored: string
 }
+
+export interface IForeignKeyRow { 
+    CONSTRAINT_NAME: string
+}

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
 import type StockItemService from "../services/stock-items.js";
-import type { ISellStockItemInput, ISellStockRequestBody, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
+import type { ISellStockRequestBody } from "../types/stock-items.js";
 
 export default class StockItemsController {
     private stockItemService: StockItemService
@@ -35,47 +35,11 @@ export default class StockItemsController {
             })
         }
     }
-
-    // getItem = async (req: Request, res: Response) => {
-    //     const {id} = req.params;
-    //     const stockItemId = Number(id);
-    //     if(isNaN(stockItemId)) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             body: null,
-    //             message: "Invalid ID"
-    //         })
-    //     }
-    //     try {
-    //         const result = await this.stockItemService.getStockItems(stockItemId)
-    //         return res.status(200).json({
-    //             success: true,
-    //             body: result,
-    //             message: `stock_item ${id} fetched successfully`
-    //         })
-    //     }
-
-    //     catch(err) {
-    //         if(err instanceof Error) {
-    //             res.status(500).json({
-    //                 success: false,
-    //                 body: null,
-    //                 message: err.message
-    //             })
-    //         }
-    //         res.status(500).json({
-    //             success: false,
-    //             body: null,
-    //             message: "Unknown message"
-    //         })
-    //     }
-    // }
-
     sellItem = async (req: Request, res: Response) => {
         // Destructuring datas from Request.params
         let { soldItems }
         = req.body as ISellStockRequestBody;
-
+        
         if(!Array.isArray(soldItems)) {
             return res.status(400).json({
                 success: false,
@@ -109,7 +73,7 @@ export default class StockItemsController {
                 message: "Invalid request"
             })
         }
-
+        // Sending the request to mysql and return a response
         try {
             // Get the marked items for sale
             const markedItems = await this.stockItemService.getStockItems(soldItems);
@@ -132,7 +96,6 @@ export default class StockItemsController {
                         message: `item with ID ${soldItem.ID} not found`
                     })
                 }
-                console.log(dbItem, soldItem)
                 // Width is not the same
                 if (dbItem.width !== soldItem.width ||
                     dbItem.parent_id !== soldItem.parent_id
@@ -214,65 +177,4 @@ export default class StockItemsController {
         }
     }
 
-    updateItem = async (req: Request, res: Response) => {
-        try {
-            
-        }
-
-        catch(err) {
-            if(err instanceof Error) {
-                res.status(500).json({
-                    success: false,
-                    body: null,
-                    message: err.message
-                })
-            }
-            res.status(500).json({
-                success: false,
-                body: null,
-                message: "Unknown message"
-            })
-        }
-    }
-
-    // delete item from stock-item by id
-    // deleteItem = async (req: Request, res: Response) => {
-    //     const { id } = req.params;
-    //     // deleteStockItem uses number not string
-    //     const itemId = Number(id);
-
-    //     try {
-    //         // If found delete item
-    //         if (await this.stockItemService.deleteStockItem(itemId)) {
-    //             return res.status(200).json({
-    //                 success: true,
-    //                 body: itemId,
-    //                 message: `item ${id} deleted successfully from stock_items`
-    //             })
-    //         }
-    //         // If not found
-    //         else {
-    //             return res.status(404).json({
-    //                 success: false,
-    //                 body: null,
-    //                 message: 'No item found with this id'
-    //             })
-    //         }
-    //     }
-    //     // Error
-    //     catch(err) {
-    //         if(err instanceof Error) {
-    //             return res.status(500).json({
-    //                 success: false,
-    //                 body: null,
-    //                 message: err.message
-    //             })
-    //         }
-    //         return res.status(500).json({
-    //             success: false,
-    //             body: null,
-    //             message: "Unknown Error"
-    //         })
-    //     }
-    // }
 }

@@ -1,5 +1,5 @@
 import PreInvoiceDao from "../dao/pre-invoices.js"
-import type { IPreInvoiceConditions, TCreatePreInvoiceInput } from "../types/pre-invoices.js";
+import type { IPreInvoiceConditions, IPreInvoiceRequestBody, TCreatePreInvoiceInput } from "../types/pre-invoices.js";
 
 export default class PreInvoiceService {
     private preInvoiceDao = new PreInvoiceDao();
@@ -8,7 +8,7 @@ export default class PreInvoiceService {
         return this.preInvoiceDao.getAll(conditions);
     }
 
-    setPending = async (data: TCreatePreInvoiceInput) => {
-        return this.preInvoiceDao.createPending(data);
+    setPending = async (markedItems: TCreatePreInvoiceInput[]) => {
+        return this.preInvoiceDao.createPending(markedItems);
     }
 }

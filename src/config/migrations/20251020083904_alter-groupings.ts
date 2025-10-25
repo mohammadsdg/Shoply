@@ -58,9 +58,24 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('groupings', table=> {
-        table.dropForeign(['section_id'], 'fk_groupings_section_id');
-        table.dropForeign(['material_id'], 'fk_groupings_material_id');
-    })
+    const result = await knex.raw(`
+        SHOW INDEX FROM groupings
+        WHERE Key_name IN (
+            'fk_groupings_section_id',
+            'fk_groupings_material_id'
+        )
+    `);
+    const existingIndex: IIndexRow[] = result[0];
+
+    if (existingIndex.find(r=> r.Key_name === 'fk_groupings_section_id')) {
+        await knex.schema.alterTable('groupings', table=> {
+            table.dropForeign(['section_id'], 'fk_groupings_section_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_groupings_material_id')) {
+        await knex.schema.alterTable('groupings', table=> {
+            table.dropForeign(['material_id'], 'fk_groupings_material_id');
+        })
+    }
 }
 

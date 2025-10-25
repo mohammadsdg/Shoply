@@ -25,9 +25,23 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('shops', table=> {
-        table.dropForeign(['user_id'], 'fk_shops_user_id');
-        table.dropUnique(['user_id'], 'uq_shops_user_id');
-    })
+    const result = await knex.raw(`
+        SHOW INDEX FROM shops
+        WHERE Key_name IN (
+            'fk_shops_user_id',
+            'uq_shops_user_id'
+        )
+    `);
+    const existingIndex: IIndexRow[] = result[0];
+    if (existingIndex.find(r=> r.Key_name === 'fk_shops_user_id')) {
+        await knex.schema.alterTable('shops', table=> {
+            table.dropUnique(['user_id'], 'uq_shops_user_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'uq_shops_user_id')) {
+        await knex.schema.alterTable('shops', table=> {
+            table.dropForeign(['user_id'], 'fk_shops_user_id');
+        })
+    }
 }
 

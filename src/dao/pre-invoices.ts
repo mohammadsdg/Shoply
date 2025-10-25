@@ -15,17 +15,15 @@ export default class PreInvoiceDao {
             throw err;
         }
     }
-
-    async createPending(data: TCreatePreInvoiceInput) {
+    // Create pending items
+    async createPending(markedItems: TCreatePreInvoiceInput[]) {
         try {
-            const [insertId] = await db<TCreatePreInvoiceInput>('pre_invoices')
-                .insert(data);
+            const [insertId] = await db<IPreInvoiceData>('pre_invoices')
+                .insert(markedItems);
             return insertId
         }
         catch(err) {
             throw err;
         }
     }
-
-
 }

@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
             table.integer('stock_item_id').unsigned().notNullable();
             table.double('weight').unsigned().notNullable();
             table.bigint('price').unsigned().notNullable();
+            table.smallint('number').unsigned().notNullable();
             table.string('customer_name').nullable();
             table.enum('status', ['pending', 'approved', 'cancelled'], {
                 useNative: true,
@@ -22,7 +23,6 @@ export async function up(knex: Knex): Promise<void> {
         return console.log('pre_invoices exists')
     }
 }
-
 
 export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTableIfExists('pre_invoices')

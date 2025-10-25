@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
         )
     `);
     const existingIndex: IIndexRow[] = result[0];
-    if (!existingIndex) {
+    if (existingIndex.length === 0) {
         await knex.schema.alterTable('products', table=> {
             table
                 .foreign('section_id')
@@ -137,20 +137,54 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('products', table=> {
-        table.dropForeign(['brand_id'], 'fk_products_brand_id');
-        table.dropForeign(['grouping_id'], 'fk_products_grouping_id');
-        table.dropForeign(['alloy_id'], 'fk_products_alloy_id');
-        table.dropForeign(['section_id'], 'fk_products_section_id');
-        table.dropForeign(['material_id'], 'fk_products_material_id');
+    const result = await knex.raw(`
+        SHOW INDEX FROM products
+        WHERE Key_name IN (
+            'fk_products_brand_id',
+            'fk_products_grouping_id',
+            'fk_products_alloy_id',
+            'fk_products_section_id',
+            'fk_products_material_id',
+            'uq_products_five'
+        )
+    `)
+    const existingIndex: IIndexRow[] = result[0];
 
-        table.dropUnique([
-            'brand_id',
-            'grouping_id',
-            'alloy_id',
-            'section_id',
-            'material_id'
-        ], 'uq_products_five')
-    })
+    if (existingIndex.find(r=> r.Key_name === 'uq_products_five')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropUnique([
+                'brand_id',
+                'grouping_id',
+                'alloy_id',
+                'section_id',
+                'material_id'
+            ], 'uq_products_five')
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_products_brand_id')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropForeign(['brand_id'], 'fk_products_brand_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_products_grouping_id')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropForeign(['grouping_id'], 'fk_products_grouping_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_products_alloy_id')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropForeign(['alloy_id'], 'fk_products_alloy_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_products_section_id')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropForeign(['section_id'], 'fk_products_section_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'fk_products_material_id')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropForeign(['section_id'], 'fk_products_material_id');
+        })
+    }
 }
 

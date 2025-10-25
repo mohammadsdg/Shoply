@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { IIndexRow } from "../../types/knex.js";
+import type { IForeignKeyRow, IIndexRow } from "../../types/knex.js";
 
 export async function up(knex: Knex): Promise<void> {
     const result = await knex.raw(`
@@ -72,10 +72,43 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable('stock_items', table=> {
-        table.dropForeign(['parent_id'], 'fk_stock_items_parent_id');
-        table.dropUnique(['parent_id'], 'uq_stock_items_parent_id');
-        table.dropForeign(['product_size_id'], 'fk_stock_items_product_size_id');
-    })
+    const result = await knex.raw(`
+        SHOW INDEX FROM stock_items
+        WHERE Key_name IN (
+            'fk_stock_items_parent_id',
+            'uq_stock_items_parent_id',
+            'fk_stock_items_product_size_id'
+        )
+    `);
+    const existingIndex: IIndexRow[] = result[0];
+    
+    const resultFK = await knex.raw(`
+            SELECT CONSTRAINT_NAME
+            FROM information_schema.KEY_COLUMN_USAGE
+            WHERE TABLE_NAME = 'stock_items'
+                AND CONSTRAINT_NAME IN (
+                    'fk_stock_items_parent_id',
+                    'uq_stock_items_parent_id',
+                    'fk_stock_items_product_size_id'
+                )
+        `);
+    const existingFK: IForeignKeyRow[] = resultFK[0];
+    console.log(existingFK)
+
+    if (existingFK.find(r=> r.CONSTRAINT_NAME === 'fk_stock_items_parent_id')) {
+        await knex.schema.alterTable('stock_items', table=> {
+            table.dropForeign(['parent_id'], 'fk_stock_items_parent_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'uq_stock_items_parent_id')) {
+        await knex.schema.alterTable('stock_items', table=> {
+            table.dropUnique(['parent_id'], 'uq_stock_items_parent_id');
+        })
+    }
+    else if (existingFK.find(r=> r.CONSTRAINT_NAME === 'fk_stock_items_product_size_id')) {
+        await knex.schema.alterTable('stock_items', table=> {
+            table.dropForeign(['product_size_id'], 'fk_stock_items_product_size_id');
+        })
+    }
 }
 
