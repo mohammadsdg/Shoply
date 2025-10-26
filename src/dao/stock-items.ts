@@ -4,8 +4,9 @@ import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../type
 export default class StockItemDao {
     
     // Get all the stock_items and the datas for creating pre-invoice
-    async getAll() {
-        const result = await db<IStockItemData>({ si: 'stock_items' })
+    async getAll(shop_id: number) {
+
+        const query = db<IStockItemData>({ si: 'stock_items' })
             .leftJoin({ ps: 'products_size' }, 'ps.ID', 'si.product_size_id' )
             .leftJoin({ shp: 'shop_products' }, 'shp.ID', 'ps.shop_products_id')
             .leftJoin({ p: 'products' }, 'p.ID', 'shp.product_id')
@@ -22,9 +23,14 @@ export default class StockItemDao {
                 'ps.param_three',
                 'ps.density',
                 'ps.price',
-                's.name'
+                's.name as section_name',
+                'shp.ID as shop_product_id'
             )
-        return result;
+        if (shop_id) {
+            query.where("shp.shop_id", shop_id);
+        }
+        const rows = await query;
+        return rows;
     }
 
     async getByIds(itemIds: { ID: number }[]): Promise<IStockItemData[]> {

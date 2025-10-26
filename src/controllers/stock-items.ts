@@ -10,9 +10,11 @@ export default class StockItemsController {
     }
 
     // Get all the items in stock_items
-    getAllItems = async (_: Request, res: Response) => {
+    getAllItems = async (req: Request, res: Response) => {
+        const { shop_id } = req.query;
+        const shopId = Number(shop_id);
         try {
-            const result = await this.stockItemService.getAllStockItems()
+            const result = await this.stockItemService.getAllStockItems(shopId);
             return res.status(200).json({
                 success: true,
                 body: result,

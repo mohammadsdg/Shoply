@@ -3,8 +3,8 @@ import type { TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js
 
 export default class StockItemService {
     private stockItemDao = new StockItemDao();
-    async getAllStockItems() {
-        return this.stockItemDao.getAll();
+    async getAllStockItems(shop_id: number) {
+        return this.stockItemDao.getAll(shop_id);
     }
 
     async getStockItems(ids: { ID: number }[]) {

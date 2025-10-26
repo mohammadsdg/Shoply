@@ -59,7 +59,7 @@ export default class ProductsSizeController {
             })
         }
         try{
-            const result = await this.productsSizeService.getProductSize(productSizeId)
+            const result = await this.productsSizeService.getProductSize(productSizeId);
             res.status(200).json({
                 success: true,
                 body: result,
