@@ -12,7 +12,7 @@ export async function up(knex: Knex): Promise<void> {
                 .unsigned()
                 .notNullable();
     
-            table.float('width').defaultTo(null);
+            table.double('width').defaultTo(null);
             table.float('param_one').defaultTo(null);
             table.float('param_two').defaultTo(null);
             table.float('param_three').defaultTo(null);

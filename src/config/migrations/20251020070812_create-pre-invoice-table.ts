@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
             table.increments('ID').primary();
             table.integer('stock_item_id').unsigned().notNullable();
             table.double('weight').unsigned().notNullable();
+            table.double('weight').unsigned().notNullable();
             table.bigint('price').unsigned().notNullable();
             table.smallint('number').unsigned().notNullable();
             table.string('customer_name').nullable();

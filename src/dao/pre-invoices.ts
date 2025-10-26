@@ -1,6 +1,16 @@
 import { db } from "../config/db.js";
-import type { IPreInvoiceConditions, IPreInvoiceData, TCreatePreInvoiceInput, TUpdatePreInvoiceInput } from "../types/pre-invoices.js";
-import type { ISellStockItemInput, IStockItemData, TUpdateStockItem } from "../types/stock-items.js";
+import type { 
+    IPreInvoiceConditions, 
+    IPreInvoiceData, 
+    TCreatePreInvoiceInput, 
+    TUpdatePreInvoiceInput 
+} from "../types/pre-invoices.js";
+
+import type { 
+    ISellStockItemInput, 
+    IStockItemData,
+    TUpdateStockItem
+} from "../types/stock-items.js";
 
 export default class PreInvoiceDao {
     // Get all pre-invoice items based on ?status
@@ -51,17 +61,22 @@ export default class PreInvoiceDao {
             throw err;
         }
     }
+
     // Create pending items with status pending
-    async createPending(pendingItems: TCreatePreInvoiceInput) {
+    async createPending(markedItem: TCreatePreInvoiceInput) {
         try {
             const [insertId] = await db<IPreInvoiceData>('pre_invoices')
-                .insert(pendingItems);
-            return insertId
+                .insert(markedItem);
+            return {
+                ID: insertId,
+                ...markedItem
+            }
         }
         catch(err) {
             throw err;
         }
     }
+
     // Update status to approved
     async updatePending(
         pendingItems: TUpdatePreInvoiceInput[],

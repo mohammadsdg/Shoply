@@ -3,10 +3,8 @@ import type { Request, Response } from "express";
 import PreInvoiceService from "../services/pre-invoices.js";
 import type { 
     IPreInvoiceApprovedRequest, 
-    IPreInvoiceConditions, 
-    IPreInvoiceRequestBody, 
-    TCreatePreInvoiceInput, 
-    TUpdatePreInvoiceInput 
+    IPreInvoiceConditions,
+    TCreatePreInvoiceInput,
 } from "../types/pre-invoices.js";
 
 export default class PreInvoiceController {
