@@ -4,6 +4,7 @@ export interface IPreInvoiceData {
     ID: number,
     stock_item_id: number,
     weight: number,
+    width: number,
     price: number,
     number: number,
     customer_name: string,

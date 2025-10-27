@@ -64,6 +64,7 @@ export default class PreInvoiceDao {
 
     // Create pending items with status pending
     async createPending(markedItem: TCreatePreInvoiceInput) {
+        // using transaction knexjs
         try {
             const [insertId] = await db<IPreInvoiceData>('pre_invoices')
                 .insert(markedItem);

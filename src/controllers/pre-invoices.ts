@@ -62,6 +62,7 @@ export default class PreInvoiceController {
             customer_name,
             number,
             price,
+            width,
             stock_item_id,
             weight
         } = req.body as TCreatePreInvoiceInput
@@ -69,6 +70,7 @@ export default class PreInvoiceController {
         if (
             !customer_name ||
             !number ||
+            !width ||
             !price ||
             !stock_item_id ||
             !weight
@@ -84,6 +86,7 @@ export default class PreInvoiceController {
             customer_name,
             number,
             price,
+            width,
             stock_item_id,
             weight
         }
