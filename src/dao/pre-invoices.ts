@@ -52,10 +52,10 @@ export default class PreInvoiceDao {
                 status: r.stock_item_status
             }));
 
-            return [
-                {preInvoices},
-                {stockItems}
-            ]
+            return {
+                preInvoices,
+                stockItems
+            }
         }
         catch(err) {
             throw err;
