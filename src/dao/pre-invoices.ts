@@ -15,10 +15,13 @@ import type {
 export default class PreInvoiceDao {
     // Get all pre-invoice items based on ?status
     async getAll(conditions: IPreInvoiceConditions) {
-        const { status } = conditions;
+        const { status, shopId } = conditions;
         try {
-            const result = await db<IPreInvoiceData>('pre_invoices')
-                .leftJoin('stock_items', 'stock_items.ID', 'pre_invoices.ID')
+            let query = db<IPreInvoiceData>('pre_invoices')
+                .leftJoin('stock_items', 'stock_items.ID', 'pre_invoices.stock_item_id')
+                .leftJoin('products_size as ps', 'ps.ID', 'stock_items.product_size_id')
+                .leftJoin('shop_products as sp', 'sp.ID', 'ps.shop_products_id')
+                .leftJoin('shops', 'shops.ID', 'sp.shop_id')
                 .select(
                     'stock_items.ID',
                     'stock_items.product_size_id',
@@ -31,9 +34,16 @@ export default class PreInvoiceDao {
                     'pre_invoices.status as pre_invoice_status',
                     'pre_invoices.price',
                     'pre_invoices.weight',
-                    'pre_invoices.number'
+                    'pre_invoices.number',
+                    'sp.shop_id'
                 )
                 .whereRaw('pre_invoices.status = ?', [status])
+            
+            if (shopId) {
+                query = query
+                    .where({ shop_id: shopId })
+            }
+            const result = await query;
             const preInvoices = result.map(r=> ({
                 ID: r.ID,
                 stock_item_id: r.stock_item_id,

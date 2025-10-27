@@ -16,10 +16,10 @@ export default class PreInvoiceController {
 
     // Get all the items of a stock that are pending to be approved
     getAllPreInvoices = async (req: Request, res: Response) => {
-        
-        const { status } = req.query;
+        const { status, shop_id } = req.query;
+        const shopId = Number(shop_id);
 
-        if (status !== 'pending' && status !== 'approved') {
+        if (status !== 'pending' && status !== 'approved' || !shopId) {
             return res.status(400).json({
                 success: false,
                 body: null,
@@ -28,7 +28,8 @@ export default class PreInvoiceController {
         }
         
         const conditions: IPreInvoiceConditions = {
-            status: status
+            status: status,
+            shopId
         }
 
         try {

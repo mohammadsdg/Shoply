@@ -33,5 +33,6 @@ export interface IPreInvoiceApprovedRequest {
 }
 
 export interface IPreInvoiceConditions {
-    status: 'pending' | 'approved'
+    status: 'pending' | 'approved',
+    shopId: number
 }
