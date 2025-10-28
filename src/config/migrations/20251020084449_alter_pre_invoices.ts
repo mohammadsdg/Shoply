@@ -40,7 +40,7 @@ export async function down(knex: Knex): Promise<void> {
     // Getting all the constraint names from pre_invoices
     const resultFK = await knex.raw(`
         SELECT CONSTRAINT_NAME
-        FROM information_schema.KEY_COLUMN_USAGE
+        FROM information_schema.KEY_COLUMN_USAGE_USAGE
         WHERE TABLE_NAME = 'pre_invoices'
             AND CONSTRAINT_NAME IN ('fk_pre_invoices_stock_item_id')
     `);

@@ -84,7 +84,7 @@ export async function down(knex: Knex): Promise<void> {
     
     const resultFK = await knex.raw(`
             SELECT CONSTRAINT_NAME
-            FROM information_schema.KEY_COLUMN_USAGE
+            FROM information_schema.KEY_COLUMN_USAGE_USAGE
             WHERE TABLE_NAME = 'stock_items'
                 AND CONSTRAINT_NAME IN (
                     'fk_stock_items_parent_id',

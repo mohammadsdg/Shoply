@@ -4,7 +4,7 @@ import type { IIndexRow } from "../../types/knex.js";
 export async function up(knex: Knex): Promise<void> {
     const result = await knex.raw(`
         SELECT CONSTRAINT_NAME
-        FROM information_schema.KEY_COLUMN
+        FROM information_schema.KEY_COLUMN_USAGE
     `);
     const existingIndex: IIndexRow[] = result[0];
 
