@@ -17,6 +17,8 @@ export default class StockItemDao {
             .leftJoin({ shp: 'shop_products' }, 'shp.ID', 'ps.shop_products_id')
             .leftJoin({ p: 'products' }, 'p.ID', 'shp.product_id')
             .leftJoin({ s: 'sections' }, 's.ID', 'p.section_id')
+            .leftJoin({ alloy: 'alloys' }, 'alloy.ID', 'p.alloy_id')
+            .leftJoin({ brand: 'brands' }, 'brand.ID', 'p.alloy_id')
             .select(
                 'si.ID',
                 'si.product_size_id',
@@ -30,6 +32,8 @@ export default class StockItemDao {
                 'ps.density',
                 'ps.price',
                 's.name as section_name',
+                'alloy.name as alloy_name',
+                'brand.name as brand_name',
                 'shp.ID as shop_product_id'
             )
         if (shopId) {
