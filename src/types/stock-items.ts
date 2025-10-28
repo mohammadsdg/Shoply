@@ -27,3 +27,8 @@ export type TCreateStockItem = Omit<IStockItemData, 'status' | 'created_at' | 'u
     soldWidth?: number
 };
 export type TUpdateStockItem = Partial<TCreateStockItem>
+
+export interface getAllStockConditions {
+    shopId: number;
+    productSizeId: number;
+}

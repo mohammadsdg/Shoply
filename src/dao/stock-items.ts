@@ -1,10 +1,16 @@
 import { db } from "../config/db.js";
-import type { IStockItemData, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
+import type { 
+    getAllStockConditions, 
+    IStockItemData, 
+    TCreateStockItem, 
+    TUpdateStockItem 
+} from "../types/stock-items.js";
 
 export default class StockItemDao {
     
     // Get all the stock_items and the datas for creating pre-invoice
-    async getAll(shop_id: number) {
+    async getAll(conditions: getAllStockConditions) {
+        const { shopId, productSizeId } = conditions;
 
         const query = db<IStockItemData>({ si: 'stock_items' })
             .leftJoin({ ps: 'products_size' }, 'ps.ID', 'si.product_size_id' )
@@ -26,8 +32,11 @@ export default class StockItemDao {
                 's.name as section_name',
                 'shp.ID as shop_product_id'
             )
-        if (shop_id) {
-            query.where("shp.shop_id", shop_id);
+        if (shopId) {
+            query.where("shp.shop_id", shopId);
+        }
+        if (productSizeId) {
+            query.where("si.product_size_id", productSizeId)
         }
         const rows = await query;
         return rows;

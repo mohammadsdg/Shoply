@@ -1,10 +1,10 @@
 import StockItemDao from "../dao/stock-items.js";
-import type { TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
+import type { getAllStockConditions, TCreateStockItem, TUpdateStockItem } from "../types/stock-items.js";
 
 export default class StockItemService {
     private stockItemDao = new StockItemDao();
-    async getAllStockItems(shop_id: number) {
-        return this.stockItemDao.getAll(shop_id);
+    async getAllStockItems(conditions: getAllStockConditions) {
+        return this.stockItemDao.getAll(conditions);
     }
 
     async getStockItems(ids: { ID: number }[]) {
