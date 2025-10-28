@@ -149,19 +149,8 @@ export async function down(knex: Knex): Promise<void> {
         )
     `)
     const existingIndex: IIndexRow[] = result[0];
-
-    if (existingIndex.find(r=> r.Key_name === 'uq_products_five')) {
-        await knex.schema.alterTable('products', table=> {
-            table.dropUnique([
-                'brand_id',
-                'grouping_id',
-                'alloy_id',
-                'section_id',
-                'material_id'
-            ], 'uq_products_five')
-        })
-    }
-    else if (existingIndex.find(r=> r.Key_name === 'fk_products_brand_id')) {
+    
+    if (existingIndex.find(r=> r.Key_name === 'fk_products_brand_id')) {
         await knex.schema.alterTable('products', table=> {
             table.dropForeign(['brand_id'], 'fk_products_brand_id');
         })
@@ -184,6 +173,17 @@ export async function down(knex: Knex): Promise<void> {
     else if (existingIndex.find(r=> r.Key_name === 'fk_products_material_id')) {
         await knex.schema.alterTable('products', table=> {
             table.dropForeign(['section_id'], 'fk_products_material_id');
+        })
+    }
+    else if (existingIndex.find(r=> r.Key_name === 'uq_products_five')) {
+        await knex.schema.alterTable('products', table=> {
+            table.dropUnique([
+                'brand_id',
+                'grouping_id',
+                'alloy_id',
+                'section_id',
+                'material_id'
+            ], 'uq_products_five')
         })
     }
 }
