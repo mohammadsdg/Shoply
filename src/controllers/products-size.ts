@@ -138,7 +138,7 @@ export default class ProductsSizeController {
             case 1:
                 if (width && weight) {
                     volume = roundVolume(param_one, width);
-                    density = weight / volume * (1e3);
+                    density = (weight / volume) * (1e3);
                 }
                 break;
             case 2:

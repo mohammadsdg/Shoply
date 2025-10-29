@@ -115,17 +115,17 @@ export default class PreInvoiceDao {
                 }
 
                 // 2. Insert new items
-                for (let item of pendingItems) {
-                    // seperating ID because we dont want it in insert
-                    const {ID, ...newItem} = item;
-                    const [rawInsertId] = await trx<IPreInvoiceData>('pre_invoices')
-                        .insert(newItem);
-                    const insertId = Number(rawInsertId);
-                    updatedPreInvoiceItems.push({
-                        ID: insertId,
-                        ...newItem
-                    })
-                }
+                // for (let item of pendingItems) {
+                //     // seperating ID because we dont want it in insert
+                //     const {ID, ...newItem} = item;
+                //     const [rawInsertId] = await trx<IPreInvoiceData>('pre_invoices')
+                //         .insert(newItem);
+                //     const insertId = Number(rawInsertId);
+                //     updatedPreInvoiceItems.push({
+                //         ID: insertId,
+                //         ...newItem
+                //     })
+                // }
                 for (let item of soldItems) {
                     // seperating ID because we dont want it in insert
                     const {ID, ...newItem} = item;
