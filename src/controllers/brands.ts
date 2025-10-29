@@ -101,7 +101,7 @@ export default class BrandController {
         const {id} = req.params;
         const brandId = Number(id);
         const {name, info} = req.body;
-        if(!name || !info || !id) {
+        if(!name || !id) {
             return res.status(400).json({
                 success: false,
                 body: null,
@@ -110,7 +110,6 @@ export default class BrandController {
         }
         const brandData = {
             name,
-            info,
         }
         try{
             const result = await this.brandService.updateBrand(brandId, brandData);
