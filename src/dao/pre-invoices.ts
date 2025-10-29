@@ -35,6 +35,8 @@ export default class PreInvoiceDao {
                     'pre_invoices.price',
                     'pre_invoices.weight',
                     'pre_invoices.number',
+                    'pre_invoices.customer_name',
+                    'pre_invoices.width',
                     'sp.shop_id'
                 )
                 .whereRaw('pre_invoices.status = ?', [status])
@@ -103,7 +105,7 @@ export default class PreInvoiceDao {
                 
                 // 1. Deactive old items first (status = 0)
                 if (soldItemIds.length > 0 && pendingItemIds.length > 0) {
-                    await trx<TUpdatePreInvoiceInput>('pre_invoices')
+                    const result = await trx<TUpdatePreInvoiceInput>('pre_invoices')
                         .whereIn('ID', pendingItemIds)
                         .andWhere({ status: 'pending' })
                         .update({ status: 'approved' });
