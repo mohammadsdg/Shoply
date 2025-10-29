@@ -52,7 +52,9 @@ export default class PreInvoiceDao {
                 status: r.pre_invoice_status,
                 price: r.price,
                 weight: r.weight,
-                number: r.number
+                number: r.number,
+                customer_name: r.customer_name,
+                width: r.width
             }))
 
             const stockItems = result.map(r=> ({
