@@ -187,9 +187,17 @@ export default class PreInvoiceController {
                 message: "Invalid request"
             })
         }
+
+        const correctSoldItems = soldItems.filter(item=> {
+            return {
+                width: item.width,
+                product_size_id: item.product_size_id,
+                ID: item.ID
+            }
+        })
         // Sending a request to approve pendingItems and create new items
         try {
-            const result = await this.preInVoiceService.setApproved(pendingItems, soldItems);
+            const result = await this.preInVoiceService.setApproved(pendingItems, correctSoldItems);
             return res.status(200).json({
                 success: true,
                 body: result,
