@@ -22,7 +22,10 @@ const PORT: number = parseInt(process.env.SERVER_PORT || "8000");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'https://miranna.ir',
+    credentials: true
+}));
 
 app.use("/api/v1", materialsRoutes);
 app.use("/api/v1", sectionsRoute);
