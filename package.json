@@ -2,37 +2,28 @@
   "name": "shoply-backend-ts",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "migrate:structure": "knex migrate:make --migrations-directory ./src/config/migrations -x ts",
-    "migrate": "npx knex migrate:latest",
-    "migrate:rollback": "npx knex migrate:rollback",
-    "build": "tsc",
-    "start": "node dist/app.js"
+    "migrate:structure": "knex migrate:make --migrations-directory ./src/config/migrations -x js",
+    "migrate": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "start": "node src/app.js"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/knex": "^0.15.2",
-    "@types/node": "^24.4.0",
-    "colors": "^1.4.0",
-    "copyfiles": "^2.4.1",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0"
+    "nodemon": "^3.1.7"
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "knex": "^3.1.0",
     "mysql2": "^3.14.5",
-    "tree-cli": "^0.6.7",
-    "ts-node-register": "^1.0.0"
+    "tree-cli": "^0.6.7"
   }
 }
