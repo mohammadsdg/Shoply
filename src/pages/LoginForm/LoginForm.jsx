@@ -28,7 +28,7 @@ const LoginForm = () => {
     const userData = { username: userName, password };
 
     try {
-      const response = api.post("/login", userData);
+      const response = await api.post("/login", userData);
       console.log(response.data);
 
       if (response.data.success) {

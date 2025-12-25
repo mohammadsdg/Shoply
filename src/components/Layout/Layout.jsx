@@ -15,6 +15,7 @@ import {
   ListCheckIcon,
   Menu as MenuIcon,
   UsersRoundIcon,
+  ListOrderedIcon,
   Newspaper,
 } from "lucide-react";
 import {
@@ -137,6 +138,15 @@ const Layout = ({ children }) => {
             label="پیش فاکتور"
             icon={<Newspaper size={20} />}
             href="/pre-invoices"
+          />
+        </>
+      )}
+      {role === "cutter" && (
+        <>
+          <SidebarItem
+            label="سفارشات"
+            icon={ListOrderedIcon}
+            href="/income-orders"
           />
         </>
       )}

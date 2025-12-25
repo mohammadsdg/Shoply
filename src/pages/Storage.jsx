@@ -129,6 +129,7 @@ function Storage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const isSectionSelected = Boolean(filterSection);
 
   useEffect(() => {
     fetchUserShop();
@@ -690,6 +691,18 @@ function Storage() {
         </FormControl>
       </Box>
 
+      {isSectionSelected && (
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={openPricingModal}
+            disabled={!filteredItems.length}
+          >
+            قیمت‌گذاری
+          </Button>
+        </Box>
+      )}
+
       {allFiltersSelected && (
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}>
           <TextField
@@ -733,13 +746,6 @@ function Storage() {
               sx={{ width: 200 }}
             />
           )}
-          <Button
-            variant="outlined"
-            onClick={openPricingModal}
-            disabled={!filteredItems.length}
-          >
-            قیمت‌گذاری
-          </Button>
           <Button
             variant="contained"
             onClick={openCreateModal}
@@ -787,7 +793,6 @@ function Storage() {
             value={pricingTransportation}
             onChange={(e) => setPricingTransportation(e.target.value)}
           />
-
           <Button
             variant="contained"
             onClick={handleApplyPricing}

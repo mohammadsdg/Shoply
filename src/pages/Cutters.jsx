@@ -33,6 +33,7 @@ function Cutters() {
   // Refs for new cutter
   const usernameRef = useRef();
   const telephoneRef = useRef();
+  const passwordRef = useRef();
 
   const itemsPerPage = 10;
 
@@ -70,6 +71,8 @@ function Cutters() {
   const handleAddCutter = () => {
     const username = usernameRef.current.value.trim();
     const telephone = telephoneRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
+
     const shop_id = shopId;
 
     if (!username || !telephone) {
@@ -78,12 +81,13 @@ function Cutters() {
     }
 
     api
-      .post("/cutters", { username, telephone, shop_id })
+      .post("/cutters", { username, password, telephone, shop_id })
       .then(() => {
         fetchCutters();
         handleClose();
         usernameRef.current.value = "";
         telephoneRef.current.value = "";
+        passwordRef.current.value = "";
         toast.success("برش کار با موفقیت ایجاد شد");
       })
       .catch((err) => {
@@ -274,6 +278,12 @@ function Cutters() {
             fullWidth
             label="نام کاربری"
             inputRef={usernameRef}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="رمز عبور"
+            inputRef={passwordRef}
             sx={{ mb: 2 }}
           />
           <TextField
