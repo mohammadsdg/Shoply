@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState, useRef } from "react";
+﻿import React, { useEffect, useState, useRef } from "react";
 import Layout from "../components/Layout/Layout";
 import {
   Container,
@@ -21,61 +21,13 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import api from "../api";
 import { useReactToPrint } from "react-to-print";
-
-// --- ابزارهای کمکی (Utilities) ---
-const toNumber = (value) => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : 0;
-};
-
-const formatCurrency = (value) => {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed === 0) return "۰ ریال";
-  return `${parsed.toLocaleString("fa-IR")} ریال`;
-};
-
-const formatWeight = (value) => {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) return "-";
-  return `${parsed.toLocaleString("fa-IR")} کیلوگرم`;
-};
-
-const formatDate = (value) => {
-  if (!value) return "-";
-  const date = new Date(value);
-  return date.toLocaleString("fa-IR");
-};
-
-const buildDescription = (invoice, shopProducts) => {
-  const product = shopProducts.find((p) => p.ID === invoice.shop_products_id);
-  if (product) {
-    return `${product.section_name} ${product.material_name} ${product.alloy_name}`;
-  }
-  return invoice.manual_brand_name || "کالای متفرقه";
-};
-
-const buildInvoiceTotals = (invoice) => {
-  const pricePerWeight = toNumber(invoice?.selling_price || invoice?.price);
-  const totalWeight = toNumber(invoice?.total_weight || invoice?.weight);
-  const productTotal = pricePerWeight * totalWeight;
-  const piecesCount = toNumber(invoice?.number) || 0;
-  const cuttingTotal = toNumber(invoice?.cutting_price) * piecesCount;
-  const transportationTotal =
-    toNumber(invoice?.transportation_price) * piecesCount;
-  const grandTotal = productTotal + cuttingTotal + transportationTotal;
-
-  return {
-    pricePerWeight,
-    totalWeight,
-    productTotal,
-    cuttingTotal,
-    transportationTotal,
-    piecesCount,
-    grandTotal,
-  };
-};
-
-// --- زیرمجموعه‌های بصری ---
+import {
+  formatCurrency,
+  formatWeight,
+  formatDate,
+  buildDescription,
+  buildInvoiceTotals,
+} from "../utils/sectionMath";
 
 const PartyCard = ({ title, info }) => (
   <Paper
@@ -112,7 +64,7 @@ const renderInvoiceRows = (invoice, shopProducts, startIndex = 1) => {
     <TableRow key={`${invoice.ID}-cutting`}>
       <TableCell>{startIndex + 1}</TableCell>
       <TableCell>هزینه برشکاری</TableCell>
-      <TableCell>{formatCurrency(invoice.cutting_price)}</TableCell>
+      <TableCell>{formatCurrency(totals.perPieceCutting)}</TableCell>
       <TableCell>{totals.piecesCount.toLocaleString("fa-IR")} عدد</TableCell>
       <TableCell>{formatCurrency(totals.cuttingTotal)}</TableCell>
     </TableRow>,
@@ -142,7 +94,15 @@ const GroupView = ({ members, shopProducts }) => {
         فاکتور تجمیعی نهایی
       </Typography>
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          gap: 2,
+          mb: 3,
+        }}
+      >
         <PartyCard title="مشخصات فروشنده" info={firstInv?.seller_info} />
         <PartyCard title="مشخصات خریدار" info={firstInv?.buyer_info} />
       </Box>
@@ -207,45 +167,43 @@ const InvoiceDetailView = ({
         />
       </Box>
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          gap: 2,
+          mb: 3,
+        }}
+      >
         <PartyCard title="فروشنده" info={currentInvoice?.seller_info} />
         <PartyCard title="خریدار" info={currentInvoice?.buyer_info} />
       </Box>
 
       <TableContainer component={Paper} variant="outlined" sx={{ mb: 4 }}>
         <Table size="small">
+          <TableHead sx={{ bgcolor: "grey.100" }}>
+            <TableRow>
+              <TableCell>ردیف</TableCell>
+              <TableCell>شرح کالا / خدمات</TableCell>
+              <TableCell>قیمت واحد</TableCell>
+              <TableCell>مقدار / تعداد</TableCell>
+              <TableCell>جمع کل</TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {renderInvoiceRows(currentInvoice, shopProducts, 1)}
+            <TableRow sx={{ bgcolor: "primary.light" }}>
+              <TableCell colSpan={4} sx={{ fontWeight: 800, color: "white" }}>
+                جمع کل کل فاکتور:
+              </TableCell>
+              <TableCell sx={{ fontWeight: 800, color: "white" }}>
+                {formatCurrency(buildInvoiceTotals(currentInvoice).grandTotal)}
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* بخش سوییچ بین فاکتورها در چاپ مخفی می‌شود (اختیاری) */}
-      <Box className="no-print">
-        {customerInvoices.length > 0 && (
-          <>
-            <Divider sx={{ my: 2 }} />
-            <Typography
-              variant="subtitle2"
-              sx={{ mb: 1.5, fontWeight: "bold" }}
-            >
-              سایر پیش‌فاکتورهای ثبت شده برای این مشتری:
-            </Typography>
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {customerInvoices.map((inv) => (
-                <Button
-                  key={inv.ID}
-                  variant="outlined"
-                  size="small"
-                  onClick={() => onSwitch(inv)}
-                >
-                  مشاهده #{inv.ID} ({buildDescription(inv, shopProducts)})
-                </Button>
-              ))}
-            </Box>
-          </>
-        )}
-      </Box>
     </Box>
   );
 };
@@ -394,6 +352,7 @@ function PreInvoices() {
                     <TableCell>{formatDate(inv.created_at)}</TableCell>
                     <TableCell>
                       <Button
+                        variant="contained"
                         onClick={() =>
                           setModalContext({ type: "invoice", invoice: inv })
                         }
@@ -429,7 +388,7 @@ function PreInvoices() {
                   <TableCell>{formatDate(g.created_at)}</TableCell>
                   <TableCell>
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       onClick={async () => {
                         const res = await api.get(`/preinvoice-groups/${g.ID}`);
                         setModalContext({
@@ -493,15 +452,12 @@ function PreInvoices() {
             >
               بستن
             </Button>
-            {/* ۴. اضافه کردن دکمه چاپ */}
             <Button variant="contained" color="success" onClick={handlePrint}>
               چاپ فاکتور
             </Button>
           </Box>
         </Box>
       </Modal>
-
-      {/* استایل اختیاری برای مخفی کردن دکمه‌ها در هنگام چاپ واقعی */}
       <style>
         {`
           @media print {

@@ -21,76 +21,15 @@ import {
 import { ArrowBigLeftDashIcon, ArrowBigRightDashIcon } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import api from "../api";
-import { calculateCrossSectionArea } from "../utils/sectionMath";
-
-const numberOrNull = (value) => {
-  if (value === undefined || value === null || value === "") return null;
-  const parsed = Number(value);
-  return Number.isNaN(parsed) ? null : parsed;
-};
-
-const formatNumericValue = (value, fractionDigits = 0) => {
-  if (value === undefined || value === null || value === "") return "-";
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return "-";
-  return parsed.toLocaleString("fa-IR", {
-    minimumFractionDigits: fractionDigits,
-    maximumFractionDigits: fractionDigits,
-  });
-};
-
-const resolveItemArea = (item) =>
-  calculateCrossSectionArea({
-    sectionId: item.section_id,
-    sectionName: item.section_name,
-    param_one: item.param_one,
-    param_two: item.param_two,
-    param_three: item.param_three,
-  });
-
-const resolveCuttingPriceForDisplay = (item) => {
-  const base = numberOrNull(item.cutting_price);
-  if (!base) return null;
-  const area = resolveItemArea(item);
-  if (!area) return base;
-  return Number((base * area).toFixed(2));
-};
-
-const buildSectionConfigMap = (sectionsPayload = []) => {
-  const map = {};
-  sectionsPayload.forEach((section) => {
-    map[section.ID] = {
-      id: section.ID,
-      name: section.name,
-      params: section.params || 0,
-      labels: {
-        one: section.param_one || "پارامتر ۱",
-        two: section.param_two || "پارامتر ۲",
-        three: section.param_three || "پارامتر ۳",
-      },
-    };
-  });
-  return map;
-};
-
-const dimensionKeyForItem = (item, sectionConfigs) => {
-  const sectionConfig = sectionConfigs[item.section_id];
-  if (!sectionConfig || !sectionConfig.params) return null;
-
-  const values = [];
-  if (sectionConfig.params >= 1) values.push(item.param_one ?? null);
-  if (sectionConfig.params >= 2) values.push(item.param_two ?? null);
-  if (sectionConfig.params >= 3) values.push(item.param_three ?? null);
-
-  if (values.some((val) => val == null)) return null;
-  return values.join("�");
-};
-
-const dimensionLabelForItem = (item, sectionConfigs) => {
-  const key = dimensionKeyForItem(item, sectionConfigs);
-  if (!key) return "بدون ابعاد";
-  return key.replace(/�/g, " � ");
-};
+import {
+  calculateCrossSectionArea,
+  numberOrNull,
+  formatNumericValue,
+  resolveItemArea,
+  buildSectionConfigMap,
+  dimensionKeyForItem,
+  dimensionLabelForItem,
+} from "../utils/sectionMath";
 
 function Storage() {
   const [shopId, setShopId] = useState(null);
@@ -441,17 +380,16 @@ function Storage() {
 
       const idSet = new Set(ids);
       setStorageItems((prev) =>
-        prev.map((item) =>
-          idSet.has(item.ID)
-            ? {
-                ...item,
-                selling_price: sellingValue,
-                cutting_price: cuttingValue,
-                transportation_price: transportationValue,
-                price: sellingValue,
-              }
-            : item
-        )
+        prev.map((item) => {
+          if (!idSet.has(item.ID)) return item;
+          return {
+            ...item,
+            selling_price: sellingValue,
+            cutting_price: cuttingValue,
+            transportation_price: transportationValue,
+            price: sellingValue,
+          };
+        })
       );
 
       toast.success("قیمت‌ها با موفقیت ثبت شد");
@@ -559,6 +497,15 @@ function Storage() {
     }
     const brandInfo = findBrandById(brandId);
 
+    // Calculate area from selected product dimensions
+    const calculatedArea = calculateCrossSectionArea({
+      sectionId: selectedProduct.section_id,
+      sectionName: selectedProduct.section_name,
+      param_one: paramOneValue,
+      param_two: paramTwoValue,
+      param_three: paramThreeValue,
+    });
+
     const payload = {
       product_size_id: selectedSize.ID,
       parent_product_size_id: selectedSize.parent_product_size_id ?? null,
@@ -575,6 +522,7 @@ function Storage() {
       selling_price: sellingPriceValue,
       cutting_price: cuttingPriceValue,
       transportation_price: transportationPriceValue,
+      area: calculatedArea,
       manual_brand_id: brandId,
       manual_brand_name: brandInfo?.name ?? null,
       customer_name: customer.username ?? customer.name ?? null,
@@ -782,7 +730,7 @@ function Storage() {
             onChange={(e) => setPricingSelling(e.target.value)}
           />
           <TextField
-            label="هزینه برش (به ازای واحد)"
+            label="هزینه برش (به ازای واحد سطح)"
             type="number"
             value={pricingCutting}
             onChange={(e) => setPricingCutting(e.target.value)}
@@ -839,9 +787,7 @@ function Storage() {
                 <TableCell>
                   {formatNumericValue(item.selling_price, 0)}
                 </TableCell>
-                <TableCell>
-                  {formatNumericValue(resolveCuttingPriceForDisplay(item), 0)}
-                </TableCell>
+                <TableCell>{item.cutting_price}</TableCell>
                 <TableCell>
                   {formatNumericValue(item.transportation_price, 0)}
                 </TableCell>

@@ -216,6 +216,14 @@ function App() {
               </RoleProtectedRoute>
             }
           />
+          <Route
+            path="/income-orders"
+            element={
+              <RoleProtectedRoute allowedRoles={"cutter"}>
+                <Cutters />
+              </RoleProtectedRoute>
+            }
+          />
 
           <Route path="*" element={<Navigate to="/" replace />} />
 

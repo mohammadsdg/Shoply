@@ -142,13 +142,11 @@ const Layout = ({ children }) => {
         </>
       )}
       {role === "cutter" && (
-        <>
-          <SidebarItem
-            label="سفارشات"
-            icon={ListOrderedIcon}
-            href="/income-orders"
-          />
-        </>
+        <SidebarItem
+          label="سفارشات"
+          icon={<ListOrderedIcon />}
+          href="/income-orders"
+        />
       )}
     </SidebarMenu>
   );

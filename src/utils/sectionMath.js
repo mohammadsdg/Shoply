@@ -47,6 +47,10 @@ const normalizeText = (value) => {
     .toLowerCase();
 };
 
+export const computeCircleArea = (diameter) => {
+  return diameter * diameter * 3.14 / 4;
+}
+
 export const resolveSectionType = (sectionId, sectionName) => {
   const normalized = normalizeText(sectionName);
   if (normalized) {
@@ -71,7 +75,7 @@ export const computeArea = (sectionType, params = {}) => {
       const diameter = mmToMeters(params.paramOne);
       if (!diameter || diameter <= 0) return null;
       const radius = diameter / 2;
-      return Math.PI * radius * radius;
+      return 3.14 * radius * radius;
     }
     case SECTION_TYPES.PIPE: {
       const outerDiameter = mmToMeters(params.paramOne);
@@ -79,8 +83,8 @@ export const computeArea = (sectionType, params = {}) => {
       if (!outerDiameter || outerDiameter <= 0 || innerDiameter == null) {
         return null;
       }
-      const inner = innerDiameter > 0 ? Math.PI * Math.pow(innerDiameter / 2, 2) : 0;
-      const outer = Math.PI * Math.pow(outerDiameter / 2, 2);
+      const inner = innerDiameter > 0 ? 3.14 * Math.pow(innerDiameter / 2, 2) : 0;
+      const outer = 3.14 * Math.pow(outerDiameter / 2, 2);
       return outer - inner;
     }
     case SECTION_TYPES.SHEET: {
@@ -131,4 +135,168 @@ export const calculatePieceWeightKg = ({
   const density = specialWeight != null ? Number(specialWeight) * 1000 : null;
   if (!density || !Number.isFinite(density) || density <= 0) return null;
   return area * lengthMeters * density;
+};
+
+// ============================================================
+// UTILITY FUNCTIONS - Number Parsing & Formatting
+// ============================================================
+
+/**
+ * Parse a value to Number or return null if invalid
+ */
+export const numberOrNull = (value) => {
+  if (value === undefined || value === null || value === "") return null;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? null : parsed;
+};
+
+/**
+ * Convert string/number to finite number, default to 0 for invalid
+ */
+export const toNumber = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+/**
+ * Format a numeric value with optional decimal places
+ */
+export const formatNumericValue = (value, fractionDigits = 0) => {
+  if (value === undefined || value === null || value === "") return "-";
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return "-";
+  return parsed.toLocaleString("fa-IR", {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+};
+
+/**
+ * Format a number as currency (تومان)
+ */
+export const formatCurrency = (value) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed === 0) return "۰ ریال";
+  return `${parsed.toLocaleString("fa-IR")} ریال`;
+};
+
+/**
+ * Format weight value in kilogram
+ */
+export const formatWeight = (value) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return "-";
+  return `${parsed.toLocaleString("fa-IR")} کیلوگرم`;
+};
+
+/**
+ * Format date to Persian locale
+ */
+export const formatDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  return date.toLocaleString("fa-IR");
+};
+
+// ============================================================
+// SECTION & DIMENSION UTILITIES
+// ============================================================
+
+/**
+ * Build section configuration map from sections payload
+ */
+export const buildSectionConfigMap = (sectionsPayload = []) => {
+  const map = {};
+  sectionsPayload.forEach((section) => {
+    map[section.ID] = {
+      id: section.ID,
+      name: section.name,
+      params: section.params || 0,
+      labels: {
+        one: section.param_one || "پارامتر ۱",
+        two: section.param_two || "پارامتر ۲",
+        three: section.param_three || "پارامتر ۳",
+      },
+    };
+  });
+  return map;
+};
+
+/**
+ * Generate dimension key from item and section configs
+ */
+export const dimensionKeyForItem = (item, sectionConfigs) => {
+  const sectionConfig = sectionConfigs[item.section_id];
+  if (!sectionConfig || !sectionConfig.params) return null;
+
+  const values = [];
+  if (sectionConfig.params >= 1) values.push(item.param_one ?? null);
+  if (sectionConfig.params >= 2) values.push(item.param_two ?? null);
+  if (sectionConfig.params >= 3) values.push(item.param_three ?? null);
+
+  if (values.some((val) => val == null)) return null;
+  return values.join("×");
+};
+
+/**
+ * Generate readable dimension label from item and section configs
+ */
+export const dimensionLabelForItem = (item, sectionConfigs) => {
+  const key = dimensionKeyForItem(item, sectionConfigs);
+  if (!key) return "بدون ابعاد";
+  return key.replace(/×/g, " × ");
+};
+
+/**
+ * Resolve item area using cross section calculation
+ */
+export const resolveItemArea = (item) =>
+  calculateCrossSectionArea({
+    sectionId: item.section_id,
+    sectionName: item.section_name,
+    param_one: item.param_one,
+    param_two: item.param_two,
+    param_three: item.param_three,
+  });
+
+// ============================================================
+// INVOICE & CALCULATION UTILITIES
+// ============================================================
+
+/**
+ * Build description from invoice and shop products
+ */
+export const buildDescription = (invoice, shopProducts) => {
+  const product = shopProducts.find((p) => p.ID === invoice.shop_products_id);
+  if (product) {
+    return `${product.section_name} ${product.material_name} ${product.alloy_name}`;
+  }
+  return invoice.manual_brand_name || "کالای متفرقه";
+};
+
+/**
+ * Calculate invoice totals (product, cutting, transportation, grand total)
+ */
+export const buildInvoiceTotals = (invoice) => {
+  const pricePerWeight = toNumber(invoice?.selling_price || invoice?.price);
+  const totalWeight = toNumber(invoice?.total_weight || invoice?.weight);
+  const productTotal = pricePerWeight * totalWeight;
+  const piecesCount = toNumber(invoice?.number) || 0;
+  // `cutting_price` on the invoice is a per-piece value.
+  const perPieceCutting = toNumber(invoice?.cutting_price);
+  const cuttingTotal = perPieceCutting * piecesCount;
+  const transportationTotal =
+    toNumber(invoice?.transportation_price) * piecesCount;
+  const grandTotal = productTotal + cuttingTotal + transportationTotal;
+
+  return {
+    pricePerWeight,
+    totalWeight,
+    productTotal,
+    cuttingTotal,
+    perPieceCutting,
+    transportationTotal,
+    piecesCount,
+    grandTotal,
+  };
 };
