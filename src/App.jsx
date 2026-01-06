@@ -25,6 +25,7 @@ import Approved from "./pages/Approved";
 import Customers from "./pages/Customers";
 import PreInvoices from "./pages/PreInvoices";
 import Cutters from "./pages/Cutters";
+import Wallet from "./pages/Wallet";
 
 function App() {
   const location = useLocation();
@@ -221,6 +222,14 @@ function App() {
             element={
               <RoleProtectedRoute allowedRoles={"cutter"}>
                 <Cutters />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet"
+            element={
+              <RoleProtectedRoute allowedRoles={"shop-admin"}>
+                <Wallet />
               </RoleProtectedRoute>
             }
           />

@@ -22,8 +22,6 @@ function Customers() {
   const [openEdit, setOpenEdit] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Fields
   const [customerId, setCustomerId] = useState("");
   const [editUsername, setEditUsername] = useState("");
   const [editTelephone, setEditTelephone] = useState("");
@@ -31,7 +29,6 @@ function Customers() {
 
   const [shopId, setShopId] = useState();
 
-  // Refs for new customer
   const usernameRef = useRef();
   const telephoneRef = useRef();
   const addressRef = useRef();
@@ -45,6 +42,8 @@ function Customers() {
     const data = res.data.body;
 
     const found = data.find((item) => item.user_id === Number(userId)).ID;
+
+    console.log(found);
 
     setShopId(found);
   };

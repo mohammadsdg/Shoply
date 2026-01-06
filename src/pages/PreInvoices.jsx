@@ -72,7 +72,9 @@ const renderInvoiceRows = (invoice, shopProducts, startIndex = 1) => {
       <TableCell>{startIndex + 2}</TableCell>
       <TableCell>هزینه بارگیری و حمل</TableCell>
       <TableCell>{formatCurrency(invoice.transportation_price)}</TableCell>
-      <TableCell>{totals.piecesCount.toLocaleString("fa-IR")} عدد</TableCell>
+      <TableCell>
+        {totals.totalWeight.toLocaleString("fa-IR")} کیلوگرم
+      </TableCell>
       <TableCell>{formatCurrency(totals.transportationTotal)}</TableCell>
     </TableRow>,
   ];

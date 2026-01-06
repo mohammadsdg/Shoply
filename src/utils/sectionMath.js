@@ -285,8 +285,9 @@ export const buildInvoiceTotals = (invoice) => {
   // `cutting_price` on the invoice is a per-piece value.
   const perPieceCutting = toNumber(invoice?.cutting_price);
   const cuttingTotal = perPieceCutting * piecesCount;
+  const perTransportation = toNumber(invoice?.transportation_price) * invoice?.total_weight;
   const transportationTotal =
-    toNumber(invoice?.transportation_price) * piecesCount;
+    perTransportation * piecesCount;
   const grandTotal = productTotal + cuttingTotal + transportationTotal;
 
   return {
@@ -295,6 +296,7 @@ export const buildInvoiceTotals = (invoice) => {
     productTotal,
     cuttingTotal,
     perPieceCutting,
+    perTransportation,
     transportationTotal,
     piecesCount,
     grandTotal,

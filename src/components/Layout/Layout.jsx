@@ -17,6 +17,7 @@ import {
   UsersRoundIcon,
   ListOrderedIcon,
   Newspaper,
+  WalletIcon,
 } from "lucide-react";
 import {
   Box,
@@ -48,6 +49,10 @@ const Layout = ({ children }) => {
 
   const toggleDrawer = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleWalletRoute = () => {
+    navigate("/wallet");
   };
 
   const sidebarContent = (
@@ -197,6 +202,7 @@ const Layout = ({ children }) => {
               transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
               <MenuItem onClick={handleLogout}>خروج</MenuItem>
+              <MenuItem onClick={handleWalletRoute}>کیف پول</MenuItem>
             </Menu>
           </div>
         </header>
