@@ -499,7 +499,7 @@ function ShopDetails() {
 
           {Array.isArray(customers) && customers.length > 0 && (
             <Select
-              value={currentUser || customers[1].id}
+              value={currentUser || customers[0].ID}
               onChange={handleCustomerSelectChange}
               fullWidth
               sx={{ mb: 2 }}

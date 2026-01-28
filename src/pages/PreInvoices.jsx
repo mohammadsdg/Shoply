@@ -219,6 +219,7 @@ function PreInvoices() {
   const [shopId, setShopId] = useState(null);
   const [selectedInvoices, setSelectedInvoices] = useState([]);
   const [modalContext, setModalContext] = useState(null);
+  const [cutters, setCutters] = useState();
 
   // ۱. ایجاد ریفرنس برای محتوای چاپ
   const printRef = useRef(null);
@@ -228,6 +229,11 @@ function PreInvoices() {
     contentRef: printRef,
     documentTitle: `فاکتور_${modalContext?.invoice?.ID || "تجمیعی"}`,
   });
+
+  const fetchCutters = async () => {
+    const res = await api.get(`/cutters?shop_id=${shopId}`);
+    console.log(res);
+  };
 
   useEffect(() => {
     fetchInitialData();
@@ -249,6 +255,8 @@ function PreInvoices() {
 
       if (userShop) {
         setShopId(userShop.ID);
+        const res = await api.get(`/cutters?shop_id=${userShop.ID}`);
+        setCutters(res.data);
         const [invRes, groupsRes] = await Promise.all([
           api.get(`/preinvoices?shop_id=${userShop.ID}`),
           api.get(`/preinvoice-groups?shop_id=${userShop.ID}`),
@@ -390,6 +398,7 @@ function PreInvoices() {
                   <TableCell>{formatDate(g.created_at)}</TableCell>
                   <TableCell>
                     <Button
+                      sx={{ margin: "0 1rem" }}
                       variant="contained"
                       onClick={async () => {
                         const res = await api.get(`/preinvoice-groups/${g.ID}`);
@@ -400,6 +409,12 @@ function PreInvoices() {
                       }}
                     >
                       مشاهده تجمیعی
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "#F9471F" }}
+                    >
+                      اختصاص به برشکار
                     </Button>
                   </TableCell>
                 </TableRow>

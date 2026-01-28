@@ -144,6 +144,11 @@ const Layout = ({ children }) => {
             icon={<Newspaper size={20} />}
             href="/pre-invoices"
           />
+          <SidebarItem
+            label="فاکتور ها"
+            icon={<Newspaper size={20} />}
+            href="/main-invoices"
+          />
         </>
       )}
       {role === "cutter" && (
@@ -192,6 +197,8 @@ const Layout = ({ children }) => {
                 ? "سوپر ادمین"
                 : role === "shop-admin"
                 ? "ادمین فروشگاه"
+                : role === "cutter"
+                ? "برش کار"
                 : "کاربر"}
             </Button>
             <Menu

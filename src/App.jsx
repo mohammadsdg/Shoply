@@ -26,6 +26,8 @@ import Customers from "./pages/Customers";
 import PreInvoices from "./pages/PreInvoices";
 import Cutters from "./pages/Cutters";
 import Wallet from "./pages/Wallet";
+import CuttersPreInvoices from "./pages/CuttersPreInvoices";
+import Invoices from "./pages/Invoices";
 
 function App() {
   const location = useLocation();
@@ -221,7 +223,7 @@ function App() {
             path="/income-orders"
             element={
               <RoleProtectedRoute allowedRoles={"cutter"}>
-                <Cutters />
+                <CuttersPreInvoices />
               </RoleProtectedRoute>
             }
           />
@@ -230,6 +232,14 @@ function App() {
             element={
               <RoleProtectedRoute allowedRoles={"shop-admin"}>
                 <Wallet />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path="/main-invoices"
+            element={
+              <RoleProtectedRoute allowedRoles={"shop-admin"}>
+                <Invoices />
               </RoleProtectedRoute>
             }
           />

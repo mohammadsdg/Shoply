@@ -48,7 +48,7 @@ const normalizeText = (value) => {
 };
 
 export const computeCircleArea = (diameter) => {
-  return diameter * diameter * 3.14 / 4;
+  return diameter * diameter * 3.14 / 4000000;
 }
 
 export const resolveSectionType = (sectionId, sectionName) => {

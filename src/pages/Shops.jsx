@@ -59,6 +59,7 @@ function Shops() {
   const [shopAdmins, setShopAdmins] = useState([]);
 
   useEffect(() => {
+    console.log(localStorage.getItem("user_id"));
     const userId = localStorage.getItem("user_id");
     const role = localStorage.getItem("role");
     setCurrentUser({ ID: userId, role });
@@ -84,10 +85,10 @@ function Shops() {
 
   // Handle creating shop
   const handleAddShop = async () => {
-    if (!addData.name || !addData.phone || !addData.user_id) {
-      toast.error("تمام فیلدها الزامی است");
-      return;
-    }
+    // if (!addData.name || !addData.phone || !addData.user_id) {
+    //   toast.error("تمام فیلدها الزامی است");
+    //   return;
+    // }
 
     try {
       const res = await api.post("/shops", addData);
@@ -316,9 +317,11 @@ function Shops() {
                 SelectProps={{ native: true }}
                 sx={{ mb: 2 }}
                 value={addData.ID}
-                onChange={(e) =>
-                  setAddData({ ...addData, user_id: e.target.value })
-                }
+                onChange={(e) => {
+                  setAddData({ ...addData, user_id: e.target.value });
+
+                  console.log("target value" + e.target.value);
+                }}
               >
                 {/* <option value="">انتخاب کنید</option> */}
                 {shopAdmins.map((admin) => (
