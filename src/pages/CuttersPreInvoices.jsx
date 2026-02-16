@@ -62,6 +62,36 @@ function CuttersPreInvoices() {
     }));
   };
 
+  const handleSubmitFeedback = async (invoiceId) => {
+    try {
+      const feedback = inputs[invoiceId];
+      if (!feedback?.weight) {
+        toast.error("لطفاً وزن واقعی را وارد کنید");
+        return;
+      }
+
+      const payload = {
+        pre_invoice_id: invoiceId,
+        actual_weight: Number(feedback.weight),
+        actual_width: feedback.width ? Number(feedback.width) : null,
+        actual_param_one: feedback.param_one
+          ? Number(feedback.param_one)
+          : null,
+        notes: feedback.notes || null,
+      };
+
+      const res = await api.post("/cutter-feedback", payload);
+      if (res.data.success) {
+        toast.success("اندازه‌گیری‌ها با موفقیت ذخیره شد و فاکتور ایجاد شد");
+        setInputs((prev) => ({ ...prev, [invoiceId]: {} }));
+        await fetchPreInvoices(); // re-fetch from server to get fresh list
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "خطا در ذخیره اندازه‌گیری‌ها");
+    }
+  };
+
   const renderOriginalParams = (invoice) => {
     const section = sections.find((s) => s.ID === invoice.section_id);
     if (!section) return null;
@@ -71,19 +101,19 @@ function CuttersPreInvoices() {
       elements.push(
         <Typography key="param_one">
           <strong>{section.param_one}:</strong> {invoice.param_one}
-        </Typography>
+        </Typography>,
       );
     if (section.params >= 2)
       elements.push(
         <Typography key="param_two">
           <strong>{section.param_two}:</strong> {invoice.param_two}
-        </Typography>
+        </Typography>,
       );
     if (section.params === 3)
       elements.push(
         <Typography key="param_three">
           <strong>{section.param_three}:</strong> {invoice.param_three}
-        </Typography>
+        </Typography>,
       );
     return elements;
   };
@@ -159,9 +189,7 @@ function CuttersPreInvoices() {
                 />
                 <Button
                   variant="contained"
-                  onClick={() => {
-                    alert("it has been submitted");
-                  }}
+                  onClick={() => handleSubmitFeedback(invoice.ID)}
                 >
                   ذخیره
                 </Button>

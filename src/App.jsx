@@ -29,6 +29,11 @@ import Wallet from "./pages/Wallet";
 import CuttersPreInvoices from "./pages/CuttersPreInvoices";
 import Invoices from "./pages/Invoices";
 
+function MoviesPage() {
+  window.location.replace("/movies.html");
+  return null;
+}
+
 function App() {
   const location = useLocation();
   const isAuthenticated = () => !!localStorage.getItem("token");
@@ -56,6 +61,11 @@ function App() {
               </PublicRoute>
             }
           />
+
+          {/* ! THIS ROUTE SHALL BE DELETED SOON */}
+
+          <Route path="/movies" element={<MoviesPage />} />
+
           <Route
             path="/register"
             element={
