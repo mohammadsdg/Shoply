@@ -30,8 +30,13 @@ import CuttersPreInvoices from "./pages/CuttersPreInvoices";
 import Invoices from "./pages/Invoices";
 
 function MoviesPage() {
-  window.location.replace("/movies.html");
-  return null;
+  return (
+    <iframe
+      src="/movies.html"
+      style={{ width: "100%", height: "100vh", border: "none" }}
+      title="Movies"
+    />
+  );
 }
 
 function App() {
